@@ -22,13 +22,12 @@ It is possible that the steps in this first mode in the future workflow will als
 (ii) Second mode, then, creates the necessary _file\_info.xml_ supplementary metadata-file, to be used as a parameter in the subsequent *figMETS2fgs.xsl* transformation of each item ($artId_originalMD) to a *sip.xml* that is compliant with FGS-CSPackage. As explained, this is also when the actual data files belonging to an item are fetched to the corresponding package subdirectory.
 In this mode, then, **section 5** (fetching the data files) is turned **ON**, while it is important that section 0, for splitting up feeds, is turned *off* (with "out-commenting parentheses and colons), otherwise the "$artId_originalMD" files will suffer inherent duplication, producing non well-formed xml, and making them unfit for use in the next step, the actual figMETS2fgs.xsl transformation.
 
-The xslt-file currently has 3 parameters to be specified in the setup:
-
-* `deliveryFeedType = 'oai'` 
-* `deliveryMethodId = '3' `
+The xslt-file now has 2 parameters to be specified in the setup:
+`
 * `file_info_data = 'doc('${cfdu}/file_info.xml')'`
+* filext2mimetypeMap = 'doc('${cfdu}/filext2mimetypeMapMAIN.xml')'
 
-where the last is most essential and should be set up as an XPath expression (tick the box). For the time being it should be run only for individual items, thus extracted from the resulting feeds, but this might change for coming versions, so that you could run it for a whole feed at a time.
+both essential, to be set up as XPath expressions (tick the box). For they should be run only for individual items, that have been split up from the original feeds.
 
 The xslt-file contains a certain amount of preliminary hard coding (especially in the METS-header), awaiting recommended values from the development of a dedicated FGS - Common Specification model for research information and / or research datasets. This might produce also the necessity of adding further extension elements and / or attributes to the METS-file.
 
