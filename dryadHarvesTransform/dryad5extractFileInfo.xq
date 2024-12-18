@@ -1,7 +1,8 @@
 (:This xq-file is for extracting Datadryad file metadata and datafiles ...
 The declared external variable $mdFilePath is your input file, the "_originalMD"-item produced after splitting up of the Dryad-"feed" .... It could be either downloaded and converted as an xml-file to a target directory (folder), which will then be your $fileParent, with the whole file path of its new location as $mdFilePath. Or it could be input directly as a URL(?). Here the input will be the file location of an individual record / item file.xml.
 
-2024-07-16/19/22/31 *Current version 0.6: Extensive change in $z again and section 5. Fetch files to adapt to new structure in Dryad output and avoid download via html-source page. Also renamed former variable $path -> $parent to avoid confusion with inherent node $y//path. Further introduced alternative file download for items with more than 3 data files, to speed up processing and to be handled in next step (MADI)dryad6mv-dataCheXpand.sh in BASH script. Increased number of files described in file_info.xml to 100 by adding '/files?per_page=100' to $filesURL. Finally(2024-07-31) removed parenthesis in file-names with file:write-binary(concat($fileParent,replace(replace(replace(replace(replace(replace($f/path, ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o'),'\(',''),'\)','')).
+2024-09-22" *Current version 0.7: Introduce $dataDir := for $f in file:children($fileParent) return $f[file:is-dir($f)] to download datafiles directly to folder "data", avoiding moving large datafiles. ...
+2024-07-16/19/22/31 Version 0.6: Extensive change in $z again and section 5. Fetch files to adapt to new structure in Dryad output and avoid download via html-source page. Also renamed former variable $path -> $parent to avoid confusion with inherent node $y//path. Further introduced alternative file download for items with more than 3 data files, to speed up processing and to be handled in next step (MADI)dryad6mv-dataCheXpand.sh in BASH script. Increased number of files described in file_info.xml to 100 by adding '/files?per_page=100' to $filesURL. Finally(2024-07-31) removed parenthesis in file-names with file:write-binary(concat($fileParent,replace(replace(replace(replace(replace(replace($f/path, ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o'),'\(',''),'\)','')).
 Further, changed the archivalInst in $doc => file_info.xml to output only *one* instance of '468 Zoologiska institutionen' in case there are several authors with email @zoologi.su.se (as in dryad.5mkkwh72s).   
  
 20240128 Version 0.5: Change in $z and section 5 Fetch files, since $y//path does not work when total number of files > 20 (?)   
@@ -31,9 +32,10 @@ declare namespace fetch="http://basex.org/modules/fetch";
 declare namespace html="http://www.w3.org/1999/xhtml";:)
 
 declare variable $recursive := true(); 
-declare variable $mdFilePath as xs:string? external := "file://dryadHarvesTransform/dryadPages20240725json2XMLoutputUA/dryadSUaffiliatesPage1UA/D1NQ59/D1NQ59_originalMD.xml";
-declare variable $parent as xs:string? external := "file://dryadHarvesTransform/dryadPages20240725json2XMLoutputUA/dryadSUaffiliatesPage1UA";
+declare variable $mdFilePath as xs:string? external := "file:/M:/MADIDrop/dryadHarvesTransform/dryadPages20240725json2XMLoutputUA/dryadSUaffiliatesPage2UA/D1342B/D1342B_originalMD.xml";
+declare variable $parent as xs:string? external := "file:/M:/MADIDrop/dryadHarvesTransform/dryadPages20240725json2XMLoutputUA/dryadSUaffiliatesPage2UA";
 let $fileParent := if (contains($mdFilePath,'file:/')) then file:parent($mdFilePath) else $parent
+let $dataDir := for $f in file:children($fileParent) return $f[file:is-dir($f)]
 let $docMD := doc($mdFilePath)
 
 (:--- 0. Splitting-up dryadFeeds: use dryad3rdSplitFeeds.xq --- :)
@@ -102,8 +104,7 @@ let $manDLsize := if (string-length($z[1]) = 0 )  then  <manualFileSize>Replace 
 let $manDLmd5 := if(string-length($z[1]) = 0 )  then <manualMD5>Replace by manually downloaded MD5!</manualMD5> else ()
 let $warn := if  ($ORCount > 1) then ('ID-check!') else if (string-length($z[1]) = 0 ) then ('Manual file download!') else if ($y//count < $y//total) then ('Check files!') else ('None') 
 
-let $doc := <file_info  DOI="{$doi}" pubDate="{$docMD//publicationDate}" created="{$docMD//publicationDate}" updated="{$docMD//lastModificationDate}"  fileInfo-harvestDate="{current-dateTime()}" SW-Agent_exDryadFIxq="{'v0.6'}" FILELIST="{if (string-length($z[1]) = 0 )  then 'external' else $z}" FILENAMECOUNT="{if(string-length($z[1]) = 0 )  then 0 else $y//total}"  
- prefSUauthorName="{$prefSUauthorInvert}" prefSUauthORCiD="{if ($pX = $prefSUauthORCiD) then concat('https://orcid.org/',$pX) else $pX}"  archivalInst="{if (exists($docMD//email [contains(.,'zoologi.su.se')])) then '468 Zoologiska institutionen' else()}" ALERT="{$warn}">{$json2xml, $json2xmlTwo, $manDLname, $manDLsize, $manDLmd5 }</file_info>
+let $doc := <file_info  DOI="{$doi}" pubDate="{$docMD//publicationDate}" created="{$docMD//publicationDate}" updated="{$docMD//lastModificationDate}"  fileInfo-harvestDate="{current-dateTime()}" SW-Agent_exDryadFIxq="{'v0.6'}" FILELIST="{if (string-length($z[1]) = 0 )  then 'external' else $z}" FILENAMECOUNT="{if(string-length($z[1]) = 0 )  then 0 else $y//total}"  prefSUauthorName="{$prefSUauthorInvert}" prefSUauthORCiD="{if ($pX = $prefSUauthORCiD) then concat('https://orcid.org/',$pX) else $pX}"  archivalInst="{if (exists($docMD//email [contains(.,'aces.su.se')])) then '485 Institutionen för miljövetenskap (ACES)' else if (exists($docMD//email [contains(.,'zoologi.su.se')])) then '468 Zoologiska institutionen' else if (exists($docMD//email [contains(.,'dbb.su.se')])) then '431 Institutionen för biokemi och biofysik (DBB)' else()}" ALERT="{$warn}">{$json2xml, $json2xmlTwo, $manDLname, $manDLsize, $manDLmd5 }</file_info>
  
 (: archivalInst="{for $i in $docMD//email return if (substring-before(substring-after($i,'@'),'.su.se') = 'zoologi') then '468 Zoologiska institutionen' else ()}" :)
 
@@ -123,15 +124,15 @@ return  file:write-binary(concat($fileParent,replace(replace(replace(replace($f/
  till nedan: or (for $s in $y//size if ($s < 5000000001) then return :)
  
 let $fetchFiles := if  ($y//total > 3 or $y//size > 1234567890) 
-then file:write-binary(concat($fileParent,'filesDownload'),fetch:binary(concat('https://datadryad.org',$docMD//stash_X3a_download/href)))
+then file:write-binary(concat($dataDir,'filesDownload'),fetch:binary(concat('https://datadryad.org',$docMD//stash_X3a_download/href)))
 
 else for $f in $downloadFiles 
-return  file:write-binary(concat($fileParent,replace(replace(replace(replace(replace(replace(replace($f/path,',',''), ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o'),'\(','_'),'\)','')), lazy:cache(fetch:binary(concat("https://datadryad.org",$f/path/preceding-sibling::__links/stash_003adownload/href))))
+return  file:write-binary(concat($dataDir,replace(replace(replace(replace(replace(replace(replace($f/path,',',''), ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o'),'\(','_'),'\)','')), lazy:cache(fetch:binary(concat("https://datadryad.org",$f/path/preceding-sibling::__links/stash_003adownload/href))))
  
 (: possible explanation for "405 Method Not Allowed": 
 https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.xsj3tx9hx/download - browser response: "The dataset is too large for zip file generation. Please download each file individually." 
 Then, go to concat('https://doi.org/',$doi) and download
  
-otherwise (for file count $y//total > 3): in next step, bash MADIdryad6mv-dataCheXpand.sh / dryad6mv-dataCheXpand.sh unpack the zipfile using *unzip* to extract zip-files to a destination dir., default is pwd. NB! Filename of zipfile must be without extension .zip, here: 'filesDownload' :)
+otherwise (for file count $y//total > 3): in next step, bash MADIdryad6mv-dataCheXpand.sh / dryad6mv-dataCheXpand.sh unpack the zipfile using *unzip* to extract zip-files to a destination dir., default is $dataDir. NB! Filename of zipfile must be without extension .zip, here: 'filesDownload' :)
   
 return $doc

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--2024-09-09/: *Current version 0.32 - conditioned <fundingReferences> on existence of (//funders/organization) or (//funders/array/organization"> to avoid empty <funderName/> (required) in METS.xml. 
+<!--2024-12-10: *Current version 0.4 - Changed METS//@CHECKSUM creation to prioritize //digest from
+        'file_info.xml' when present (mostly older items). Discovered that otherwise checksum creation fails when number
+        of files > 3 (filesDownload unzip invoked MADIdryad6dataCheXpand.sh) and original file name whitespace is removed only
+        *after* checksum creation. (Fix in 'dryad5extractFileInfo.xq' or in 'MADIdryad6dataCheXpand.sh' !) 
+        Restored @SW-Agent_exDryadFIxq in <agent ROLE="ARCHIVIST" TYPE="OTHER" OTHERTYPE="SOFTWARE">. 
+    2024-11-28: Version 0.33 - Further conditioned <creators> in dmdSec on existence of(//authors/array) or just (//authors">
+    2024-09-09: Version 0.32 - conditioned <fundingReferences> on existence of (//funders/organization) or (//funders/array/organization"> to avoid empty <funderName/> (required) in METS.xml. 
                 Updated <mets:div LABEL="{if (not($preMimeLabel)) then 'application' else substring-before($preMimeLabel,'/')}"> to avoid empty LABELs in structMap. Tokenized filextension to last . for filenames with multiple inline periods: ($filext2mimetypeMap/map/entry[@filext = tokenize($i, '\.')[last()]]/@mimetype).                      
     2024-09-02: Please NOTE! .txt files with Windows ANSI encoding cannot be opened directly in Oxygen (with UTF8 or Unicode) - e.g. //MADIDrop/dryadHarvesTransform/dryadPages20240725json2XMLoutputUA/dryadSUaffiliatesPage1UA/dryad.p2q4r/data/README_for_Spens_et_al_2016_DATASET.txt; use Anteckningar/Notepad! 
     2024-08-21/26/29: Version 0.31 - changed resourceTypeGeneral to better accord with DataCite-4.5 for items with 'primary_article' as relatedWorks//relationship: relationType="References" resourceTypeGeneral="{if (relationship='primary_article') then 'JournalArticle' else concat(upper-case(substring(relationship,1,1)),substring(relationship,2))}">
@@ -192,7 +198,7 @@
                 <name>SUharvestTransformer_from_datadryad.org</name>
                 <note>
                     <xsl:value-of
-                        select="concat('dryadDataCite2FGS.xsl v0.32, ', $file_info_data/file_info/@SW-Agent)"
+                        select="concat('dryadDataCite2FGS.xsl v0.4, dryad5extractFileInfo.xq ',$file_info_data/file_info/@SW-Agent_exDryadFIxq)"
                     />
                 </note>
             </agent>
@@ -258,8 +264,11 @@
                         <identifier identifierType="DOI">
                             <xsl:value-of select="$file_info_data/file_info/@DOI"/>
                         </identifier>
-                        <creators>
-                            <xsl:for-each select="//authors">
+                        <creators>               
+                            <xsl:for-each select="if (//authors/array) then
+                                (//authors/array)
+                                else
+                                //authors">
                                 <creator>
                                     <creatorName>
                                         <xsl:value-of select="concat(lastName, ', ', firstName)"/>
@@ -447,11 +456,12 @@
                                             following-sibling::size"/>
                                 <xsl:attribute name="CHECKSUMTYPE" select="'MD5'"/>
 
-
-                                <xsl:attribute name="CHECKSUM" select="
-                                        if ($linkOnly = 'true') then
-                                            ancestor::file_info/manualFiles/manualMD5
-                                        else
+                                <xsl:attribute name="CHECKSUM"  select="
+                                    if ($linkOnly = 'true')
+                                    then
+                                    ancestor::file_info/manualFiles/manualMD5
+                                    else if (string-length(following-sibling::digest) &gt; 5) then following-sibling::digest
+                                    else
                                             for $i in ($checkSums/files/file/path)
                                             return
                                                 if (normalize-space($i) = $replace-p) then
