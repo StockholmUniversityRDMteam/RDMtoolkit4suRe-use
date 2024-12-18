@@ -1,4 +1,9 @@
-<!-- Latest updates: 2024-08-20/23/29: .biom .ds_store [rev.: .inp]  .missingclades [rev.: .newick] .nexus .taxa .template .tgz | Previous: 2024-07-30/31 .fa .pl .rar .sh .tre .tree .trees | 2024-07-29 .fasta | 2024-07-24 .2s.nex & .3s.nex (under .nex) ; .weights| 2024-07-17 .db (SQLite)|  2024-07-09: .phy Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/] | 2024-07-04 .gfs ; .gwy | 2024-04-18 .fid ; .nex ; .nhx ; .phy ; .Rev | Previous: 2024-03-13/25 .avi ; .rtf ; .7z -->
+<!-- Latest updates: 2024-12-06/16 .con .cpg .dbf .nii .ovr .tfw | Previous: 2024-10-02 .ris .ttl 
+ | 2024-09-06/09 .JPG .rmd .treefile .vcf.gz | 2024-08-20/23/29/30 .biom .ds_store .fst [rev.: .inp]  .missingclades [rev.: .newick] .nexus .taxa .template .tgz 
+ |  2024-07-30/31 .fa .pl .rar .sh .tre .tree .trees | 2024-07-29 .fasta 
+ | 2024-07-24 .2s.nex & .3s.nex (under .nex) ; .weights| 2024-07-17 .db (SQLite)
+ |  2024-07-09: .phy Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/] 
+ | 2024-07-04 .gfs ; .gwy | 2024-04-18 .fid ; .nex ; .nhx ; .phy ; .Rev | 2024-03-13/25 .avi ; .rtf ; .7z -->
 <map>
     <entry filext="7z" applicationType="https://www.7-zip.org/"
         mimetype="application/x-7z-compressed" source="https://datatypes.net/" date="20240325"/>
@@ -7,8 +12,9 @@
     <entry filext="ams" mimetype="application/octet-stream"
         openwith="https://www.agico.com/text/software/anisoft/anisoft.php" source="SND2021-44"
         date="20210218"/>
-    <entry filext="annot" applicationType="https://datatypes.net/freesurfer-file-types"
-        mimetype="application/octet-stream" source="https://datatypes.net/" date="20200701"/>
+    <entry filext="annot" mimetype="application/octet-stream"
+        applicationType="https://datatypes.net/freesurfer-file-types"
+        source="https://datatypes.net/" date="20200701"/>
     <entry filext="asc" mimetype="text/plain" source="datatypes.net" date="20230619"/>
     <entry filext="aspx" mimetype="text/plain" source="datatypes.net" date="20191003"/>
     <entry filext="avi" mimetype="video/x-msvideo" source="https://datatypes.net/open-avi-files"
@@ -27,16 +33,25 @@
         date="20190922"/>
     <entry filext="cdf" mimetype="application/x-netcdf" source="datatypes.net" PUID="fmt/282"
         date="20210426"/>
-    <entry filext="cpg" mimetype="text/plain" source="JHOVE 1.18.1"/>
+    <!--  <entry filext="cpg" mimetype="text/plain" source="JHOVE 1.18.1"/>  -->
+    <entry filext="cpg" mimetype="application/octet-stream" source="https://datatypes.net/ext/cpg"
+        source2="https://fileinfo.com/extension/cpg" application="https://fileinfo.com/software/esri/arcgis_for_desktop"
+        date="20241212"/>
     <entry filext="css" mimetype="text/css" source="https://datatypes.net/" date="20180712"/>
     <entry filext="csv" mimetype="text/csv" source="https://datatypes.net/" date="20180712"/>
     <entry filext="codeml" mimetype="text/plain" source="JHOVE 1.18.1" date="20191203"/>
+    <entry filext="con" mimetype="text/plain" application="http://bioinformatics.psb.ugent.be/software/details/TREECON"
+        openwith="Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
+        source="JHOVE 1.18.1" date="20241209"/>
     <entry filext="dat" mimetype="text/plain" source="JHOVE 1.18.1" origin="PROGRAMITA"
         date="20201203"/>
     <entry filext="db" mimetype="application/x-sqlite3" source="https://fileinfo.com/extension/db"
         source2="https://doi.org/10.5061/dryad.xsj3tx9hx" source3="PRONOM" openwith="SQLite"
         PUID="fmt/729" date="20240717"/>
-    <entry filext="dbf" mimetype="application/octet-stream" source="JHOVE 1.18.1"/>
+    <!--  <entry filext="dbf" mimetype="text/plain" source="JHOVE 1.18.1"/>  -->
+    <entry filext="dbf" mimetype="application/octet-stream" source="https://datatypes.net/ext/dbf"
+        application="https://fileinfo.com/software/esri/arcgis_for_desktop"
+        date="20241216"/>
     <entry filext="dll" mimetype="application/x-msdownload"
         mimetype2="application/vnd.microsoft.portable-executable"
         source="https://datatypes.net/open-dll-files" source2="PRONOM" date="20201027"
@@ -80,6 +95,10 @@
         date="20200722" PUID="fmt/806"/>
     <entry filext="fits" mimetype="application/octet-stream" source="https://datatypes.net/"
         date="20191003"/>
+    <entry filext="fs" mimetype="text/x-fasta" comment="by analogy with .fa, viewable as text"
+        fileinfo="FASTA-file(s) for DNA sequences"
+        openwith="https://www.dnabaser.com/download/DNA-Baser-sequence-assembler/index.html"
+        source="see also local file_info.xml which has: application/x-fasta" date="20240830"/>
     <entry filext="gif" mimetype="image/gif" source="https://datatypes.net/" date="20180712"/>
     <entry filext="gff3" mimetype="application/octet-stream"
         source="https://datatypes.net/open-gff3-files" application="https://jbrowse.org/jb2/"
@@ -87,8 +106,9 @@
     <entry filext="gfs" mimetype="application/octet-stream"
         source="https://datatypes.net/open-gwy-files" date="20240704"
         openwith="http://gwyddion.net/"/>
-    <entry filext="gii" applicationType="https://datatypes.net/freesurfer-file-types"
-        mimetype="application/octet-stream" source="https://datatypes.net/" date="20200701"/>
+    <entry filext="gii" mimetype="application/octet-stream"
+        applicationType="https://datatypes.net/freesurfer-file-types"
+        source="https://datatypes.net/" date="20200701"/>
     <entry filext="gpkg" mimetype="application/geopackage+sqlite3" source="PRONOM"
         application="https://www.qgis.org/en/site/" openwith="https://fileinfo.com/extension/gpkg"
         PUID="fmt/1700" date="20240202"/>
@@ -101,7 +121,8 @@
     <entry filext="htm" mimetype="text/html" source="https://datatypes.net/" date="20180712"/>
     <entry filext="html" mimetype="text/html" source="https://datatypes.net/" date="20180712"/>
     <entry filext="inp" mimetype="text/plain" source="JHOVE 1.18.1"
-        source2="http://gretl.sourceforge.net/" openwith="Mplus (https://www.statmodel.com/)" date="20210803"/>
+        source2="http://gretl.sourceforge.net/" openwith="Mplus (https://www.statmodel.com/)"
+        date="20210803"/>
     <entry filext="ipynb" mimetype="application/octet-stream" source="https://datatypes.net/"
         date="20200331"/>
     <entry filext="irr" mimetype="text/plain" source="JHOVE 1.18.1" origin="PROGRAMITA"
@@ -111,6 +132,7 @@
     <entry filext="jasp" mimetype="application/octet-stream" source="JHOVE 1.18.1"/>
     <entry filext="jpeg" mimetype="image/jpeg" source="https://datatypes.net/" date="20180712"/>
     <entry filext="jpg" mimetype="image/jpeg" source="https://datatypes.net/" date="20180712"/>
+    <entry filext="JPG" mimetype="image/jpeg" source="https://datatypes.net/" date="20240909"/>
     <entry filext="jr6" mimetype="application/octet-stream"
         openwith="https://www.agico.com/text/software/remasoft/remasoft.php"
         source="   https://datatypes.net/open-jr6-files" date="20210218"/>
@@ -130,8 +152,8 @@
     <entry filext="m" mimetype="application/matlab-m" source="https://datatypes.net/"
         date="20180712"/>
     <entry filext="m4v" mimetype="video/x-m4v" source="https://datatypes.net/" date="20180712"/>
-    <entry filext="mat" mimetype="application/matlab-mat" source="https://datatypes.net/" source2="https://fileinfo.com/extension/mat" source3="DROID"
-        date="20190118; 20240829"/>
+    <entry filext="mat" mimetype="application/matlab-mat" source="https://datatypes.net/"
+        source2="https://fileinfo.com/extension/mat" source3="DROID" date="20190118; 20240829"/>
     <!-- Please note that same file extension '.mat' is also used for Microsoft Access Table, with mime-type: application/vnd.ms-access! -->
     <entry filext="mb" mimetype="text/plain" source="JHOVE 1.18.1" date="20200109"/>
     <entry filext="md" mimetype="text/markdown" application="Markdown" source="PRONOM"
@@ -168,6 +190,10 @@
         date="20240823"/>
     <entry filext="nhx" mimetype="text/plain" application="https://datatypes.net/open-nhx-files"
         date="20240418"/>
+    <entry filext="nii" mimetype="application/octet-stream" source="https://datatypes.net/ext/nii"
+        source2="https://www.wikidata.org/wiki/Q28777714"
+        application="https://nifti-imaging.github.io" PUID="fmt/798|fmt/1094"
+        date="20241206"/>
     <entry filext="nxs" mimetype="text/plain" source="JHOVE 1.18.1" date="20200109"/>
     <entry filext="odp" mimetype="application/vnd.oasis.opendocument.presentation"
         source="https://datatypes.net/" date="20180712"/>
@@ -180,6 +206,9 @@
     <entry filext="otf" applicationType="https://datatypes.net/amp-font-viewer-file-types"
         mimetype="application/vnd.ms-opentype" source="https://datatypes.net/" date="20200630"/>
     <entry filext="out" mimetype="text/plain" source="JHOVE 1.18.1" date="20191203"/>
+    <entry filext="ovr" mimetype="application/octet-stream" source="https://datatypes.net/ext/ovr" source2="https://fileinfo.com/extension/ovr"
+        application="https://www.esri.com/arcgis-blog/products/arcgis-desktop/imagery/overviews-and-pyramids-part-1-of-2-what-are-they-and-why-do-i-need-them"
+        date="20241211"/>
     <entry filext="pdf" mimetype="application/pdf" source="JHOVE 1.18.1"/>
     <entry filext="ph" mimetype="application/octet-stream" source="https://datatypes.net/"
         date="20180712"/>
@@ -226,9 +255,13 @@
     <entry filext="RDS" mimetype="application/octet-stream"
         application="Microsoft SQL Server Reporting Data Source"
         source="https://datatypes.net/open-rds-files" date="20240105"/>
+    <entry filext="ris" mimetype="text/plain" source="JHOVE 1.32.0" date="20241002"/>
     <entry filext="Rmd" mimetype="text/x-gfm"
         source="https://www.digipres.org/formats/sources/githublinguist/formats/#313"
         date="20190319"/>
+    <entry filext="rmd" mimetype="text/x-gfm"
+        source="https://www.digipres.org/formats/sources/githublinguist/formats/#313"
+        date="20240909"/>
     <entry filext="rst" applicationType="restructuredText" mimetype="text/plain"
         source="JHOVE 1.18.1" date="20200723"/>
     <entry filext="rtf" applicationType="RichTextFormatDocument-MS" mimetype="application/rtf"
@@ -269,6 +302,9 @@
         date="20240823"/>
     <entry filext="tex" mimetype="application/x-latex" source="https://datatypes.net/"
         date="20200325"/>
+    <entry filext="tfw" mimetype="application/octet-stream" source="https://datatypes.net/ext/tfw"
+        source2="https://fileinfo.com/extension/tfw" application="https://www.esri.com/en-us/arcgis/products/arcgis-desktop/overview"
+        date="20241212"/>
     <entry filext="tgz" mimetype="application/x-gzip" source="https://datatypes.net/open-tgz-files"
         openwith="https://fileinfo.com/extension/tgz" date="20240820"/>
     <entry filext="tif" mimetype="image/tiff" source="https://datatypes.net/" date="20180816"/>
@@ -281,6 +317,9 @@
     <entry filext="tree" mimetype="text/plain"
         openwith="Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
         source="JHOVE 1.18.1" date="20240730"/>
+    <entry filext="treefile" mimetype="text/plain"
+        openwith="Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
+        source="By analogy" date="20240909"/>
     <entry filext="trees" mimetype="text/plain"
         openwith="Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
         source="JHOVE 1.18.1" date="20240730"/>
@@ -290,10 +329,15 @@
         date="20190710"/>
     <entry filext="tsvs" mimetype="text/x-tab-separated-values-star" source="GraphDB9.2-webinar "
         date="20200514"/>
+    <entry filext="ttl" mimetype="text/plain" source="JHOVE 1.32.0" date="20241002"/>
     <entry filext="ttls" mimetype="text/x-turtlestar" source="GraphDB9.2-webinar " date="20200514"/>
     <entry filext="txt" mimetype="text/plain" source="https://datatypes.net/" date="20180816"/>
     <entry filext="vcf" mimetype="application/octet-stream" source="https://datatypes.net/"
         date="20200331"/>
+    <entry filext="vcf.gz" mimetype="text/plain"
+        source="https://www.nationalarchives.gov.uk/PRONOM/Format/proFormatSearch.aspx?status=detailReport&amp;id=1713"
+        source2="https://doi.org/10.5061/dryad.qrfj6q5m7" PUID="fmt/908" openwith="7-zip(Extract)"
+        openAs="Text" date="20240906"/>
     <entry filext="vhdr" mimetype="application/octet-stream"
         source="https://datatypes.net/open-vhdr-files" date="20210701"
         openwith="https://bids.neuroimaging.io/"/>
