@@ -32,5 +32,5 @@ The bash script-file, *dir-mvOrigMDfigMETS.sh* in this repository is for making 
 
 With this version comes also a similar directory with 3 script files for Zenodo, **zenHarvesTranform**: _extractZenFileInfo.xq_, _miniSplit.xq_ and _zeno2fgs.xsl_ . For Zenodo is also used the BASH script _dir-mvOrigMD.sh_ , that is located at the root together with the _filext2mimetypeMapMAIN.xml_, outside **zenHarvesTranform**. The use of these scripts for Zenodo is similar to that for Figshare, except there is no first automatic feed fetcher, and instead a separate _miniSplit.xq_ script for doing the split up. (This is partly due to a less frequent influx of new items to our Stockholm University Library community at Zenodo, compared to su.figshare.com, so we tend to make the harvest at irregular intervals, perhaps only once a year.)
 
-We are also developing similar tools for Dryad, soon to be added to this repository. 
+The main similar tools for Dryad have now been added to this repository, some additional initial files remain to be uploaded. 
 
