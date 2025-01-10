@@ -1,4 +1,4 @@
-<!-- Latest updates: 2024-12-06/16 .con .cpg .dbf .nii .ovr .tfw | Previous: 2024-10-02 .ris .ttl 
+<!-- Latest updates: 2025-01-07/08 .fst .lsm .nexus (update) .pkl .pper | Previous: 2024-12-06/19 .con .cpg .dbf .fas .fastq .nii .ovr .tfw | 2024-10-02 .ris .ttl 
  | 2024-09-06/09 .JPG .rmd .treefile .vcf.gz | 2024-08-20/23/29/30 .biom .ds_store .fst [rev.: .inp]  .missingclades [rev.: .newick] .nexus .taxa .template .tgz 
  |  2024-07-30/31 .fa .pl .rar .sh .tre .tree .trees | 2024-07-29 .fasta 
  | 2024-07-24 .2s.nex & .3s.nex (under .nex) ; .weights| 2024-07-17 .db (SQLite)
@@ -35,12 +35,13 @@
         date="20210426"/>
     <!--  <entry filext="cpg" mimetype="text/plain" source="JHOVE 1.18.1"/>  -->
     <entry filext="cpg" mimetype="application/octet-stream" source="https://datatypes.net/ext/cpg"
-        source2="https://fileinfo.com/extension/cpg" application="https://fileinfo.com/software/esri/arcgis_for_desktop"
-        date="20241212"/>
+        source2="https://fileinfo.com/extension/cpg"
+        application="https://fileinfo.com/software/esri/arcgis_for_desktop" date="20241212"/>
     <entry filext="css" mimetype="text/css" source="https://datatypes.net/" date="20180712"/>
     <entry filext="csv" mimetype="text/csv" source="https://datatypes.net/" date="20180712"/>
     <entry filext="codeml" mimetype="text/plain" source="JHOVE 1.18.1" date="20191203"/>
-    <entry filext="con" mimetype="text/plain" application="http://bioinformatics.psb.ugent.be/software/details/TREECON"
+    <entry filext="con" mimetype="text/plain"
+        application="http://bioinformatics.psb.ugent.be/software/details/TREECON"
         openwith="Dendroscope3 [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
         source="JHOVE 1.18.1" date="20241209"/>
     <entry filext="dat" mimetype="text/plain" source="JHOVE 1.18.1" origin="PROGRAMITA"
@@ -50,8 +51,7 @@
         PUID="fmt/729" date="20240717"/>
     <!--  <entry filext="dbf" mimetype="text/plain" source="JHOVE 1.18.1"/>  -->
     <entry filext="dbf" mimetype="application/octet-stream" source="https://datatypes.net/ext/dbf"
-        application="https://fileinfo.com/software/esri/arcgis_for_desktop"
-        date="20241216"/>
+        application="https://fileinfo.com/software/esri/arcgis_for_desktop" date="20241216"/>
     <entry filext="dll" mimetype="application/x-msdownload"
         mimetype2="application/vnd.microsoft.portable-executable"
         source="https://datatypes.net/open-dll-files" source2="PRONOM" date="20201027"
@@ -82,9 +82,18 @@
         fileinfo="FASTA-file(s) for DNA sequences"
         openwith="https://www.dnabaser.com/download/DNA-Baser-sequence-assembler/index.html"
         source="https://www.file-extensions.org/fa-file-extension" date="20240731"/>
+    <entry filext="fas" mimetype="text/x-fasta" comment="by analogy, viewable as text"
+        fileinfo="FASTA-file(s) for DNA sequences" application="https://www.snapgene.com/"
+        openwith="https://www.dnabaser.com/download/DNA-Baser-sequence-assembler/index.html"
+        source="https://datatypes.net/ext/fas" date="20241219"/>
     <entry filext="fasta" mimetype="text/x-fasta" fileinfo="FASTA-file(s) for DNA sequences"
         openwith="https://www.file-extensions.org/fasta-file-extension"
         source="https://www.digipres.org/formats/sources/fdd/formats/#fdd000622" date="20240729"/>
+    <entry filext="fastq" mimetype="text/plain" application="https://maq.sourceforge.net/"
+        fileinfo="http://fileformats.archiveteam.org/wiki/FASTA_and_FASTQ"
+        source="https://www.digipres.org/formats/sources/wikidata/formats/#q3063023"
+        source2="https://datatypes.net/ext/fastq"
+        source3="https://www.file-extensions.org/fastq-file-extension" date="20241219"/>
     <entry filext="fid" mimetype="application/octet-stream"
         source="https://www.digipres.org/formats/sources/wikidata/formats/#q105855241"
         application="http://www.felixnmr.com" openwith="https://mestrelab.com/"
@@ -99,6 +108,7 @@
         fileinfo="FASTA-file(s) for DNA sequences"
         openwith="https://www.dnabaser.com/download/DNA-Baser-sequence-assembler/index.html"
         source="see also local file_info.xml which has: application/x-fasta" date="20240830"/>
+    <entry filext="fst" mimetype="text/plain" source="JHOVE 1.32.0" date="20250108"/>
     <entry filext="gif" mimetype="image/gif" source="https://datatypes.net/" date="20180712"/>
     <entry filext="gff3" mimetype="application/octet-stream"
         source="https://datatypes.net/open-gff3-files" application="https://jbrowse.org/jb2/"
@@ -149,6 +159,9 @@
         date="20221115"/>
     <entry filext="label" applicationType="https://datatypes.net/freesurfer-file-types"
         mimetype="application/octet-stream" source="https://datatypes.net/" date="20200630"/>
+    <!-- NB! Could not open or convert lsm-file in dryad.hr1f1/data as tif/tiff or with xnview! -->
+    <entry filext="lsm" mimetype="image/tiff" source="DROID v6.5" PUID="fmt/353" source2="JHOVE 1.32.0"
+        source3="https://datatypes.net/ext/lsm" source4="https://www.file-extensions.org/lsm-file-extension" application="https://www.openmicroscopy.org/bio-formats/" application2="https://www.xnview.com/en/" date="20250108"/>    
     <entry filext="m" mimetype="application/matlab-m" source="https://datatypes.net/"
         date="20180712"/>
     <entry filext="m4v" mimetype="video/x-m4v" source="https://datatypes.net/" date="20180712"/>
@@ -186,14 +199,16 @@
         application="https://datatypes.net/mrbayes-file-types"
         openwith="https://nbisweden.github.io/MrBayes/" source="JHOVE 1.18.1" date="20240724"/>
     <entry filext="nexml" mimetype="text/xml" source="JHOVE 1.18.1"/>
-    <entry filext="nexus" mimetype="application/unknown" openAs="Text" source="local"
-        date="20240823"/>
+    <!-- Deprecated: <entry filext="nexus" mimetype="application/unknown" openAs="Text" source="local"
+        date="20240823"/> -->
+    <entry filext="nexus" mimetype="text/plain" application="Dendroscope3
+        [https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/software/dendroscope/]"
+        source="JHOVE 1.32.0" date="20250108"/>
     <entry filext="nhx" mimetype="text/plain" application="https://datatypes.net/open-nhx-files"
         date="20240418"/>
     <entry filext="nii" mimetype="application/octet-stream" source="https://datatypes.net/ext/nii"
         source2="https://www.wikidata.org/wiki/Q28777714"
-        application="https://nifti-imaging.github.io" PUID="fmt/798|fmt/1094"
-        date="20241206"/>
+        application="https://nifti-imaging.github.io" PUID="fmt/798|fmt/1094" date="20241206"/>
     <entry filext="nxs" mimetype="text/plain" source="JHOVE 1.18.1" date="20200109"/>
     <entry filext="odp" mimetype="application/vnd.oasis.opendocument.presentation"
         source="https://datatypes.net/" date="20180712"/>
@@ -206,7 +221,8 @@
     <entry filext="otf" applicationType="https://datatypes.net/amp-font-viewer-file-types"
         mimetype="application/vnd.ms-opentype" source="https://datatypes.net/" date="20200630"/>
     <entry filext="out" mimetype="text/plain" source="JHOVE 1.18.1" date="20191203"/>
-    <entry filext="ovr" mimetype="application/octet-stream" source="https://datatypes.net/ext/ovr" source2="https://fileinfo.com/extension/ovr"
+    <entry filext="ovr" mimetype="application/octet-stream" source="https://datatypes.net/ext/ovr"
+        source2="https://fileinfo.com/extension/ovr"
         application="https://www.esri.com/arcgis-blog/products/arcgis-desktop/imagery/overviews-and-pyramids-part-1-of-2-what-are-they-and-why-do-i-need-them"
         date="20241211"/>
     <entry filext="pdf" mimetype="application/pdf" source="JHOVE 1.18.1"/>
@@ -217,9 +233,13 @@
         source="JHOVE 1.18.1" date="20240418"/>
     <entry filext="phylip" mimetype="text/plain" source="JHOVE 1.18.1" date="20191203"/>
     <entry filext="PhyloXML" mimetype="application/xml"/>
+    <entry filext="pkl" mimetype="application/octet-stream" source="JHOVE 1.32.0"
+        source2="https://fileinfo.com/extension/pkl"
+        application="https://docs.python.org/3/library/pickle.html" date="20250107"/>
     <entry filext="pl" mimetype="text/x-script.perl"
         source="https://www.file-extensions.org/pl-file-extension" date="20240730"/>
     <entry filext="png" mimetype="image/png" source="JHOVE 1.18.1"/>
+    <entry filext="pper" mimetype="text/plain" source="JHOVE 1.32.0" date="20250107"/>
     <entry filext="ppt" mimetype="application/vnd.ms-powerpoint"/>
     <entry filext="pptx" mimetype="application/vnd.ms-powerpoint"/>
     <entry filext="prj" mimetype="text/plain" source="JHOVE 1.18.1"/>
@@ -303,7 +323,8 @@
     <entry filext="tex" mimetype="application/x-latex" source="https://datatypes.net/"
         date="20200325"/>
     <entry filext="tfw" mimetype="application/octet-stream" source="https://datatypes.net/ext/tfw"
-        source2="https://fileinfo.com/extension/tfw" application="https://www.esri.com/en-us/arcgis/products/arcgis-desktop/overview"
+        source2="https://fileinfo.com/extension/tfw"
+        application="https://www.esri.com/en-us/arcgis/products/arcgis-desktop/overview"
         date="20241212"/>
     <entry filext="tgz" mimetype="application/x-gzip" source="https://datatypes.net/open-tgz-files"
         openwith="https://fileinfo.com/extension/tgz" date="20240820"/>
