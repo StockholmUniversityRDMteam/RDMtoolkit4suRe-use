@@ -1,0 +1,10 @@
+[Latest update: 2025-12-03. Using metadataPrefix=datacite. 
+First created 2025-11-20 from 0figsFeedsURLnrList.txt and 0zenSUBfeedURLnrList.txt. 
+Use BASH shell script 1dryadUpdate.sh to retrieve pending url [NB! no change of lines!]: head -n 7 figsMETSfeedsURLnrList.txt | tail -n 1     
+Latest delivery: url02, *pending* url on *line 7* WITHOUT " " to work in amended script with automated curl!):
+************** 
+        url03=
+        https://datadryad.org/api/v2/search?affiliation=https://ror.org/05f0yaq80&modifiedSince=2025-12-03T00:00:0Z
+        url02="https://datadryad.org/api/v2/search?affiliation=https://ror.org/05f0yaq80&modifiedSince=2025-09-05T00:00:0Z"               
+        url01="https://datadryad.org/api/v2/search?affiliation=https://ror.org/05f0yaq80&modifiedSince=2025-05-21T00:00:0Z"
+       
