@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--2024-12-10: *Current version 0.4 - Changed METS//@CHECKSUM creation to prioritize //digest from
+<!--2025-09-04: *Current version 0.42 - Changed from hardcoded CHECKSUMTYPE='MD5' to <xsl:attribute name="CHECKSUMTYPE" select="if ($linkOnly = 'true') 
+    then 'MD5' else if (string-length(following-sibling::digest) &gt; 5) then
+    upper-case(following-sibling::digestType) else 'MD5'"/> since METS.xml allows also for other types.
+    2025-06-04/09: Version 0.41 - Changed resourceTypeGeneral by adding condition 
+        "else if (contains(relationship,'supplement')) then 'Other' else ..."
+    2024-12-10: Version 0.4 - Changed METS//@CHECKSUM creation to prioritize //digest from
         'file_info.xml' when present (mostly older items). Discovered that otherwise checksum creation fails when number
         of files > 3 (filesDownload unzip invoked MADIdryad6dataCheXpand.sh) and original file name whitespace is removed only
         *after* checksum creation. (Fix in 'dryad5extractFileInfo.xq' or in 'MADIdryad6dataCheXpand.sh' !) 
@@ -198,11 +203,11 @@
                 <name>SUharvestTransformer_from_datadryad.org</name>
                 <note>
                     <xsl:value-of
-                        select="concat('dryadDataCite2FGS.xsl v0.4, dryad5extractFileInfo.xq ',$file_info_data/file_info/@SW-Agent_exDryadFIxq)"
+                        select="concat('dryadDataCite2FGS.xsl v0.41, dryad5extractFileInfo.xq ',$file_info_data/file_info/@SW-Agent_exDryadFIxq)"
                     />
                 </note>
             </agent>
-            <!--  The funding information metadata will be found in the dmdSec (DataCite 4.5) and neeed not be duplicated here:      
+            <!--  The funding information metadata will be found in the dmdSec (DataCite 4.5) and need not be duplicated here:      
             <xsl:for-each select="//funders">
                 <agent ROLE="OTHER" TYPE="ORGANIZATION">
                     <name>
@@ -323,7 +328,9 @@
                                         //relatedWorks">
                                 <relatedIdentifier relatedIdentifierType="{identifierType}"
                                     relationType="References"
-                                    resourceTypeGeneral="{if (contains(relationship,'article')) then 'JournalArticle' else concat(upper-case(substring(relationship,1,1)),substring(relationship,2))}">
+                                    resourceTypeGeneral="{if (contains(relationship,'article')) then
+                                    'JournalArticle' else if (contains(relationship,'supplement')) then
+                                    'Other' else concat(upper-case(substring(relationship,1,1)),substring(relationship,2))}">
                                     <xsl:value-of select="identifier"/>
                                 </relatedIdentifier>
                             </xsl:for-each>
@@ -454,7 +461,13 @@
                                             ancestor::file_info/manualFiles/manualFileSize
                                         else
                                             following-sibling::size"/>
-                                <xsl:attribute name="CHECKSUMTYPE" select="'MD5'"/>
+                                <xsl:attribute name="CHECKSUMTYPE" select="
+                                    if ($linkOnly = 'true')
+                                    then
+                                    'MD5'
+                                    else if (string-length(following-sibling::digest) &gt; 5) then
+                                    upper-case(following-sibling::digestType)
+                                    else 'MD5'"/>
 
                                 <xsl:attribute name="CHECKSUM"  select="
                                     if ($linkOnly = 'true')

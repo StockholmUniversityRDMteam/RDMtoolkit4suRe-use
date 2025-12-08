@@ -10,8 +10,8 @@ declare namespace local="local";
 
 
 declare variable $recursive := true(); 
-declare variable $mdFilePath as xs:string? external := "file://dryadHarvesTransform/dryadPages20240725json2XMLoutput/dryadSUaffiliatesPage4/dryadSUaffiliatesPage4-api2024-07-25.xml";
-declare variable $parent as xs:string? external := "file://dryadHarvesTransform/dryadPages20240725json2XMLoutput/dryadSUaffiliatesPage4";
+declare variable $mdFilePath as xs:string? external := "file:/C:/Users/joph9849/Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/dryadHarvesTransform/dryadSUaffiliatesUpdate20251203json2xml/dryadSUaffiliatesUpdate20251203.xml";
+declare variable $parent as xs:string? external := "file:/C:/Users/joph9849/Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/dryadHarvesTransform/dryadSUaffiliatesUpdate20251203json2xml";
 let $fileParent := if (contains($mdFilePath,'file:/')) then file:parent($mdFilePath) else $parent
 let $docMD := doc($mdFilePath)
 

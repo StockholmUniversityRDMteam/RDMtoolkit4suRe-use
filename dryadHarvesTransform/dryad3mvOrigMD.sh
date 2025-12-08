@@ -1,40 +1,11 @@
 #!/bin/bash
-# Latest update: 2024-09-05
-# Provenance: Script for creating Zenodo itemFolders with bash 
+# Latest update: 2025-09-15
+# Provenance: Script for creating Zenodo itemFolders with bash
+# cd Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/dryadHarvesTransform/dryadSUaffiliatesUpdateYYYYMMDDjson2xml(senaste)
+#bash ../dryad3mvOrigMD.sh
 
 MDlist=*MD.xml
 
-###--- Pieces of development history; trial and error ---
-##furlRaw=$(for f in MDlist; do grep -r versions/ $f | cut -d '>' -f 2 | cut -d '<' -f -1; done)
-##//dryadHarvesTransform/dryadPages20220803json2xml/dryadSUaffiliatesPage17feed20220803pacs
-##$ for f in $MDlist; do grep -r versions/ $f | cut -d '>' -f 2 | cut -d '<' -f 1; done
-##/api/v2/versions/88094
-##/api/v2/versions/147709
-
-## $ for i in $furlRaw; do echo https://datadryad.org$i/files; done
-## https://datadryad.org/api/v2/versions/88094/files
-## https://datadryad.org/api/v2/versions/147709/files
-
-## $ fURL=$(for i in $furlRaw; do echo https://datadryad.org$i/files; done)
-
-## $ for f in $MDlist; do grep -r versions/ $f | cut -d '>' -f 2 | cut -d '<' -f 1 | cut -d '/' -f 5; done
-## 88094
-## 147709
-
-## $ fName=$(for f in $MDlist; do grep -r versions/ $f | cut -d '>' -f 2 | cut -d '<' -f 1 | cut -d '/' -f 5; done)
-
-## $ for i in $fName; do curl -G https://datadryad.org/api/v2/versions/${i}/files > $i'_fileMD.json'; done
-
-## SUCCESS! Produces the two files 88094_fileMD.json 147709_fileMD.json in correct folder
-
-## $ fileMDlist=*fileMD*
-## After conversion:
-## $ echo $fileMDlist
-## 147709_fileMD.json 147709_fileMD.xml 88094_fileMD.json 88094_fileMD.xml
-
-## $ for f in *fileMD.xml; do grep %2F $f | cut -d 'F' -f 2 | cut -d '<' -f 1 |uniq ; done
-## dryad.jm63xsjc3
-## dryad.gqnk98sjd
 
 MDcut=$(for m in $MDlist; do echo $m | cut -d'_' -f 1; done)
 
@@ -44,7 +15,7 @@ dirList=$(for i in $MDcut; do echo $i | mkdir -p $i/data; done)
 
 
 #-------------------------------------------------
-# This part of the script is for moving $itemSplits created in the extract*FileInfo.xq to their new $itemFolds for further processing
+# This part of the script is for moving $itemSplits created by the dryad2splitUpdateFile.xq  to their new $itemFolds for further processing
   
 for f in $MDcut; do mv ${f}*MD.xml ./${f}/; done
 
@@ -52,19 +23,37 @@ for f in $MDcut; do mv ${f}*MD.xml ./${f}/; done
 
 ls -R
 
+#----------------Edited selection from MADIArkDryad5DataCheXpand---------------------------------------------------
+DL="dryad\.*"
+
+Y=$(echo $DL)
+    
+for i in $Y ; do  echo $i; cd $i;
+
+#Copy schemas to each package directory
+#Location: Nextcloud//reposit2fgsCSP/dryadHarvesTransform/schemas/
+#NO! Doing that now will create problem in dryad4extractFileInfo.xq, which requires /data/ to be the
+#unique subfolder/directory in the main package folder. Getting the schemas folder should be done in
+#MADIArkDryad5mv-dataCheXpand
+  
+#cp -r ../../schemas .
+
+#Add parameter doc filext2mimetypeMapMAIN.xml to each package directory
+#Location: Nextcloud//reposit2fgsCSP/filext2mimetypeMapMAIN.xml 
+cp -r ../../../filext2mimetypeMapMAIN.xml .
+
+cd ..
+
+done
 #-------------------------------------------------------------------
+current=$(date +"%Y%m%d")
 
-##URL=https://datadryad.org/api/v2/datasets/doi%3A 
+cd ..
 
+cp -r dryadSUaffiliatesUpdate${current}json2xml /q/MADIArkiv/dryadHarvesTransform/
 
-##url=$(for i in $MDlist; do grep -r /download $i | cut -d '>' -f 2 | cut -d '<' -f 1; done)
+#cd /q/MADIArkiv/dryadHarvesTransform/  - does not work inside the script!?   
 
- 
-##//dryadHarvesTransform/dryadPages20220803json2xml/dryadSUaffiliatesPage17feed20220803pacs
-##$ for u in $url; do echo "https://datadryad.org"$u; done
-##https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.gqnk98sjd/download
-##https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.jm63xsjc3/download
- 
-#>curl -G ${url} > dryadSUaffiliatesPage${p}-api${current}.json
-      
-#>done  
+read -p "This should have copied the new dryadSUaffiliatesUpdateYYYYMMDDjson2xml
+with its data subfolder to MADIArkiv/dataverseHarvesTransform. 
+Leave BASH open as is now, but Go to Oxygen to confirm!"  
