@@ -1,5 +1,5 @@
 **dryadHarvesTransform** has 6 scripts + a 0-list.txt of deliveries, numbered after usage order.  
-First check that the  _0dryadUpdateList.txt_  is uppdated with latest deliverydate on line 7.  
+First check that the  _0dryadUpdateList.txt_  is updated with latest delivery-date on line 7.  
 Then bash 1dryadUpdate.sh downloads native metadata as JSON for new/updated (modified) datasets, with at least one SU-affiliated contributor, saved as a JSON-fil  _dryadSUaffiliatesUpdateYYYYMMDD.json_ (current = harvesting date). In the  header _count/total_ shows how many datasets .  Convert the json-file to XML _dryadSUaffiliatesUpdateYYYYMMDD.xml_ in Oxygen  with Tools> JSON Tools>JSON.  
 Copy Location for the resulting XML-file and open BaseX - dryad2splitUpdateFile.xq. Paste this on line 13 as your $mdFilePath (in ” ” , + corresponding path (shortened to the parent folder) in $parent  (line 14). Run BaseX!  > Ctrl+Enter
 Go back to GitBASH current `cd dryadSUaffiliatesUpdateYYYYMMDDjson2xml`,  run: `bash  ../dryad3mvOrigMD.sh`. 
