@@ -562,11 +562,11 @@
                             <xsl:value-of select="$file_info_data/file_info/@DOI"/>
                         </identifier>
                         <xsl:copy-of select="//datacite:creators" copy-namespaces="no"/>
-                        <!--   <xsl:copy-of select="//datacite:titles" copy-namespaces="no"/>  -->
-                        <titles>
+                        <xsl:copy-of select="//datacite:titles" copy-namespaces="no"/> 
+                      <!--  <titles>
                             <title><xsl:value-of
-                                select="local:removeHtmlTags(//datacite:title)"/></title>
-                        </titles>
+                                select="local:removeHtmlTags(//datacite:title[1])"/></title>
+                        </titles> -->
                         <xsl:copy-of select="//datacite:publisher" copy-namespaces="no"/>
                         <xsl:copy-of select="//datacite:publicationYear" copy-namespaces="no"/>
                         <xsl:copy-of select="//datacite:subjects" copy-namespaces="no"/>

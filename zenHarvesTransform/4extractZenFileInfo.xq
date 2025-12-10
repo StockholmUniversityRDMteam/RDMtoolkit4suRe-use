@@ -39,10 +39,11 @@ declare namespace json="json";
 :)
 
 declare variable $recursive := true(); 
-declare variable $mdFilePath as xs:string? external := "file:/F:/MADIDrop/zenSUBdataCiteFeed04prod20231215FGS2.0/6619582/6619582_originalMD.xml";
-declare variable $path as xs:string? external := "file:/F:/MADIDrop/zenSUBdataCiteFeed04prod20231215FGS2.0";
+declare variable $mdFilePath as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed07pacs/17366744/17366744_originalMD.xml";
+declare variable $path as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed07pacs";
 let $fileParent := if (contains($mdFilePath,'file:/')) then file:parent($mdFilePath) else $path
-let $pathChildren := file:children($path)
+(:let $pathChildren := file:children($path)- not used, instead use $dataDir (from 2et4extractFigsFileInfo.xq) :)
+let $dataDir := for $f in file:children($fileParent) return  $f[file:is-dir($f) and file:name($f) = 'data']
 let $docMD := doc($mdFilePath)
 
 (:-------  0. Splitting-up  zenFeeds:  use miniSplit.xq
@@ -65,6 +66,7 @@ let $json2xml := json:parse($jsonMD)
 for $y in ($json2xml)
 let $z := $y//files//key
 let $downloadURL := $y//files//links[@type='object']/self
+let $downloadURLclean := for $c in $downloadURL return (replace(replace($c,'\(','_'),'\)','_')) 
 (:
 let $downloadURL := for $i in $fileUUID return concat(replace($i,substring-after($i,'org/'),'/record/'),$u,'/files/',substring-after(substring-after($i,'files/'),'/'),'?download=1')
 let $w :=  if ($y//embargo__date/@type='null') then 'None'  else $y//embargo__date
@@ -122,14 +124,14 @@ let $archivalInst := $stepA
 
 (:------ Files, folders and result doc: 'file_info.xml' ----------- :)
 
-let $mimeTypes := for $t in $downloadURL return fetch:content-type($t)
+(:let $mimeTypes := for $t in $downloadURLclean return fetch:content-type($t):)
 let $subFold := if (contains($mdFilePath,'https://')) then (file:create-dir(concat($path,'subFold'))) else ()
 let $manDLname := if ($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):)  then <manualFileName>Replace by manually downloaded filename!</manualFileName> else ()
 let $manDLsize := if ($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):)  then  <manualFileSize>Replace by manually downloaded fileSize!</manualFileSize> else ()
 let $manDLmd5 := if ($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):)  then <manualMD5>Replace by manually downloaded MD5!</manualMD5> else ()
 let $warn := if (not ($authors/following-sibling::datacite:affiliation[contains(.,'Stockholm')]) or ($ORCount > 1)) then ('ID-check!') else if($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):) then ('Manual file download!') else ('None') 
 let $doc := <file_info  DOI="{($y//doi)[1]}" pubDate="{$y//publication__date}" created="{$y//created}" updated="{$y//updated}"  fileInfo-harvestDate="{current-dateTime()}" SW-Agent_eZFIxq="{'v0.7'}" FILELIST="{if(($y//files//is__link__only/text()='true') )  then 'external' else $z}" FILENAMECOUNT="{count($z)}"  
- prefSUauthorName="{$prefSUauthorInvert}" prefSUauthORCiD="{concat('https://orcid.org/',$pX)}" archivalInst="{$archivalInst[1]}"  ALERT="{$warn}">{$y//files, <mimeTypes>{$mimeTypes}</mimeTypes>, <references>{$y//references/_}</references>, $manDLname, $manDLsize, $manDLmd5 }</file_info> 
+ prefSUauthorName="{$prefSUauthorInvert}" prefSUauthORCiD="{concat('https://orcid.org/',$pX)}" archivalInst="{$archivalInst[1]}"  ALERT="{$warn}">{$y//files,(: <mimeTypes>{$mimeTypes}</mimeTypes>,:) <references>{$y//references/_}</references>, $manDLname, $manDLsize, $manDLmd5 }</file_info> 
  
 (:---- 3. Create item Folders: deprecated. 
 Use Bash script:  "dir-mvOrigMD.sh" --  :)
@@ -143,8 +145,11 @@ let $result := file:append(if (contains($mdFilePath,'https:\/\/')) then ($subFol
 
 let $fetchFiles := for $f in $downloadURL  return file:write-binary(concat($fileParent,replace(replace(replace(if (contains(substring-before(substring-after($f,'files/'),'?'),'/')) then substring-after(substring-before(substring-after($f,'files/'),'?'),'/') else (substring-before(substring-after($f,'files/'),'?')),'%20|%40','_'),'%C3%A5|%C3%A4','a'),'%C3%B6','o')), lazy:cache(fetch:binary($f))) 
 :)
-
-let $fetchFiles := for $f in $downloadURL  return (file:write-binary(concat($fileParent,$f/ancestor::links/preceding-sibling::key), lazy:cache(fetch:binary($f)))) (: This WORKS for most items except for filenames with spaces! :)
+(: let $fetchFiles := if  ($y//total > 5 and $y//size < 823456790) 
+then file:write-binary(concat($dataDir,'filesDownload'),fetch:binary(concat('https://su.figshare.com/ndownloader/articles/',$artId)))
+else :)
+let $fetchFiles := for $f in $downloadURL  return (file:write-binary(concat($dataDir,$f/ancestor::links/preceding-sibling::key), lazy:cache(fetch:binary($f)))) 
+(: This WORKS for most items except for filenames with spaces! :)
 
 (: 
 let $fetchFiles := for $f in $y//files[contains(.,'https')]//links/content  return (file:write-binary(concat($fileParent,$f/ancestor::links/preceding-sibling::key), lazy:cache(fetch:binary($f)))) This does NOT work! :)

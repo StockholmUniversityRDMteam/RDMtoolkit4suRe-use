@@ -1,0 +1,14 @@
+[Latest update: 2025-12-01. Using metadataPrefix=datacite. 
+First created 2025-11-20 from 0figsFeedsURLnrList.txt and zenSUBdataciteFeed07.xml. 
+Use BASH shell script 1zenSUBdataciteFeedFirst.sh to retrieve pending url [NB! no change of lines!]: head -n 7 figsMETSfeedsURLnrList.txt | tail -n 1     
+Latest delivery: url06, *pending* url on *line 7* WITHOUT " " to work in amended script with automated curl!):
+************** 
+        url08=
+        https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2025-11-27
+        url07="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2025-06-12&until=2025-11-26"
+        url06="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2025-01-21&until=2025-06-11"
+        url05="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2023-11-01&until=2025-01-20"
+        url04="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2023-01-04&until=2023-10-31"
+        url03="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2022-02-18&until=2023-01-03"
+        url02="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary&from=2020-07-06&until=2022-02-17"
+        url01="https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary"

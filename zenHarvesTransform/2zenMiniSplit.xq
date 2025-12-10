@@ -8,8 +8,8 @@ declare namespace OAI-PMH="http://www.openarchives.org/OAI/2.0/";
 
 
 declare variable $recursive := true(); 
-declare variable $mdFilePath as xs:string? external := "file:/C:/Users/joph9849/Desktop/reposit2fgsCSP/zenHarvesTransform/zenSUBdataCiteFeed04prod20231211R/zenodoFeed04prod20231211R.xml";
-declare variable $path as xs:string? external := "file:/C:/Users/joph9849/Desktop/reposit2fgsCSP/zenHarvesTransform/zenSUBdataCiteFeed04prod20231211R";
+declare variable $mdFilePath as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed07pacs/zenSUBfeed07-api20250612until20251126.xml";
+declare variable $path as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed07pacs";
 let $fileParent := if (contains($mdFilePath,'file:/')) then file:parent($mdFilePath) else $path
 let $pathChildren := file:children($path)
 let $docMD := doc($mdFilePath)
@@ -19,7 +19,7 @@ let $docMD := doc($mdFilePath)
                                   
 let $itemSplit := for $i in $docMD//OAI-PMH:record  return $docMD//$i
 
-let $origID :=   for $j in $itemSplit//datacite:identifier return if ($j[@identifierType="URL"]) then concat(substring-after($j,'record/'),'_originalMD') else concat(substring-after($j,'zenodo.'),'_originalMD')
+let $origID := for $j in $itemSplit//datacite:identifier return (:if ($j[@identifierType="URL"]) then concat(substring-after($j,'record/'),'_originalMD') else :) concat(substring-after($j,'zenodo.'),'_originalMD')
 let $originalMD := for $j in $origID,$i in $itemSplit 
 return file:append(concat($fileParent,$j,".xml"),$i[contains(./OAI-PMH:header/OAI-PMH:identifier,substring-before($j,'_originalMD'))])
 (:[position()[$j]]:)
