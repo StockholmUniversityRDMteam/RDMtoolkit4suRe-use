@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for Dataverse, latest update 2025-08-18
+# Script for Dataverse, latest update 2025-12-11
 # Change to native API dataverse_json  > nativeMDfile_info.json, with better filemetadata 
 #(incl. checksums md5 and sizes), handling of hierarchical, structured datadirectories 
 # Prel: cd //dataverseHarvesTransform
@@ -41,17 +41,6 @@ new items - abort the operation in BASH without pressing Enter but Ctrl+C."
 ##Otherwise you will only get the first item, and not the following results!
 #Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/dataverseHarvesTransform/
 #$ grep identifier SULcontents.json
-#            "identifier": "DVN/BAMCSI",
-#           "identifier": "DVN/P7BPHE",
-#            "identifier": "DVN/SI6TUS",
-#            "identifier": "DVN/MGZBAL",
-#           "identifier": "DVN/7RY1T9",
-#           "identifier": "DVN/ILA0XI",
-#            "identifier": "DVN/VQW92D",
-#            "identifier": "DVN/0S2ITH",
-#            "identifier": "DVN/HPYDKW",
-#            "identifier": "DVN/IITKTQ",
-#            "identifier": "DVN/07DCHE",
 
 #Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/dataverseHarvesTransform/dvnDDImetadataHarvest20250520
 ##2. steps##
@@ -114,6 +103,10 @@ cd ..
 cp -r dataverseDDIharvest$current /m/MADIArkiv/dataverseHarvesTransform/
 
 read -p "This should have copied the entire new dataverseDDIharvest$current with all its subfolder contents to
-MADIArkiv/dataverseHarvesTransform. Go to Oxygen to confirm and then in BASH perform the next 
-2MADIdataverseFileHarvest-script in order to fetch the actual datafiles."
-
+MADIArkiv/dataverseHarvesTransform and then cd to there. Leave BASH open as is now, but Go to Oxygen to confirm!
+Next, in Oxygen open the MADIArkiv/dataverseHarvesTransform/2MADIdataverseFileHarvest.sh -script, to
+put in your own Dataverse API token (from https://dataverse.harvard.edu/dataverseuser.xhtml?selectTab=apiTokenTab, 
+while logged in to Dataverse) on line 21 instead of: ¨Your Dataverse API token here¨.
+Return to BASH to perform the 2MADIdataverseFileHarvest-script in order to fetch the actual datafiles.
+But first, press Enter to end this 1. script and go to MADIArkiv/dataverseHarvesTransform"
+ 
