@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--20240219: *Current v1.0 As for figDataCite2FGS.xsl addition of parameter doc filext2mimetypeMapMAIN.xml (via dir-mvOrigMDfigDataCite.sh) allows for removal of inherent variable "filext2mimetypeMap". 
+<!--20250618: *Current v1.4 Reinstated IsReferencedBy for selected curated items, where relation @IsSupplemenTo
+    tis known to hold, as  dcterms:IsReferencedBy is not to contain literals.                             
+    20250225: v1.3 Removed "dcterms:isReferencedBy" as proposed change to *dcterms:references* proved only to produce duplicate field values.                
+    20241009: v1.2 Adjusted structMap again with new level <mets:div LABEL="data"> in accordance with extractFigsFileInfo.xq v1.2 and dryad7DataCite2FGS.xsl v0.32
+    20240704: v1.1 Adjusted structMap template for "linkOnly" - metadata only records.
+    20240219: v1.0 As for figDataCite2FGS.xsl addition of parameter doc filext2mimetypeMapMAIN.xml (via dir-mvOrigMDfigDataCite.sh) allows for removal of inherent variable "filext2mimetypeMap". 
                Adjustments of mets/@OBJID, mets/@TYPE, mets/@PROFILE, mets/@csip:CONTENTINFORMATIONTYPE="MIXED", note/@csip:NOTETYPE="IDENTIFICATIONCODE" ... in accordance with https://www.riksarkivet.se/Media/pdf-filer/doi-t/Riksarkivets_tillampning_av_E-ARK_CSIP_och_SIP_V1.0.pdf
-    20230210-0823: v0.9999 Added file_info/@resourceDOI as first choice for dcterms:isReferencedBy. 20230823: Added file_info/@isSupplmentTo as first choice for dcterms:isReferencedBy and made file_info/@resourceDOI second choice.
+    20230210-0823: v0.9999 Added file_info/@resourceDOI as first choice for dcterms:isReferencedBy.
+    20230823: Added file_info/@isSupplementTo as first choice for dcterms:isReferencedBy and made file_info/@resourceDOI second choice.
     20220315-1115: v0.9998 Created structMap for multiple manualFiles added to file_info parameter, and fileIDs from manualMD5. Still lacking automated solution for downloadURLs in  metsFLocat/@xlink:href, now from dcterms:references, 
                not synched with actual file. Added mimetypes for .omv from DROID, .kml and .kmz from datatypes.net.
     20210701-0803: v0.9997 Moved function local:removeHtmlTags before first template, and added '|&#xA;' to strings replaced by ' '.
@@ -56,7 +62,7 @@
     tokenize (to account for filenames with inherent '.'), now functioning removal of HTML-tags from 
     dc:description and more accurate dmdSec. Also changed default hardcoded value of 
     ext:CONTENTTYPESPECIFICATION to current FGS-CSPackage specification, awaiting dedicated FGS-CommonSpec. 
-    for research data / research material./ joakim.philipson@su.se-->
+    for research data / research material./ joakim.philipson@su.se -->
 
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
@@ -70,19 +76,15 @@
     exclude-result-prefixes="xsl xs">
     <xsl:output indent="yes"/>
 
-
     <xsl:param name="file_info_data" as="document-node()"/>
     <xsl:param name="filext2mimetypeMap" as="document-node()"/>
     
  <!-- Deprecated:  
     <xsl:param name="deliveryFeedType" as="xs:string"/>
     <xsl:variable name="OAI_FEED_TYPE" select="xs:string('oai')"/>
-
     <xsl:variable name="filext2mimetypeMap"> - 
-    now from parameter doc filext2mimetypeMapMAIN.xml  
- 
+    now from parameter doc filext2mimetypeMapMAIN.xml   
    -->
-
 
     <xsl:function name="local:removeHtmlTags" as="xs:string">
         <xsl:param name="element"/>
@@ -106,7 +108,6 @@
             
             <xsl:call-template name="createMetsHeader"/>
                 
-
             <xsl:call-template name="createDmdSec"/>
 
             <xsl:call-template name="createFileSec"/>
@@ -157,7 +158,7 @@
                 <name>SUB_oai-pmhMETS_harvestTransformer_from_su.figshare.com</name>
                 <note>
                     <xsl:value-of
-                        select="concat('figMETS2fgs.xsl v1.0', ' extractFigsFileInfo.xq ', $file_info_data/file_info/@SW-Agent_eFFIxq)"
+                        select="concat('5figMETS2fgs.xsl v1.4', ', 2et4extractFigsFileInfo.xq ', $file_info_data/file_info/@SW-Agent_2et4extractFigsFileInfo.xq)"
                     />
                 </note>
             </agent>
@@ -320,30 +321,40 @@
                             </dcterms:references>
                         </xsl:for-each>
                         <xsl:choose>
-                            <xsl:when
-                                test="string-length($file_info_data/file_info/@isSupplementTo) &gt; 0">
-                                <dcterms:isReferencedBy>
-                                    <xsl:value-of
-                                        select="$file_info_data/file_info/@isSupplementTo"
-                                    />
-                                </dcterms:isReferencedBy>
-                            </xsl:when>
-                            <xsl:when
-                                test="string-length($file_info_data/file_info/@resourceDOI) &gt; 0">
+                         <!--   2024-10-30 Proved to not hold for item 27117831.v1, thus removed
+                             until further notice. 
+                             2025-06-18 Reinstated for selected curated items, where relation is
+                             known to hold:  -->  
+                             <xsl:when
+                                test="$file_info_data/file_info/@relationType='IsSupplementTo'">
                                 <dcterms:isReferencedBy>
                                     <xsl:value-of
                                         select="$file_info_data/file_info/@resourceDOI"
                                     />
                                 </dcterms:isReferencedBy>
-                            </xsl:when>
+                            </xsl:when>  
+                       <!-- 20250225: Removed "dcterms:isReferencedBy" below as proposed change to
+                         *dcterms:references* proved to just duplicate field values from above <xsl:for-each select="$file_info_data/file_info/references/_">
+                          
                             <xsl:when
+                                test="string-length($file_info_data/file_info/@resourceDOI) &gt; 0">
+                                <dcterms:references>
+                                    <xsl:value-of
+                                        select="$file_info_data/file_info/@resourceDOI"
+                                    />
+                                </dcterms:references>
+                            </xsl:when>
+                            
+                            2025-06-18 Removing this again, as dcterms:isReferencedBy should not contain
+                                literals:
+                              <xsl:when
                                 test="string-length($file_info_data/file_info/custom__fields/_[name = 'Associated Publication']/value) &gt; 0">
                                 <dcterms:isReferencedBy>
                                     <xsl:value-of
                                         select="local:removeHtmlTags($file_info_data/file_info/custom__fields/_[name = 'Associated Publication']/value)"
                                     />
                                 </dcterms:isReferencedBy>
-                            </xsl:when>
+                            </xsl:when>  -->
                             <xsl:otherwise/>
                         </xsl:choose>
                         <xsl:choose>
@@ -374,8 +385,9 @@
                     select="concat('fileXternal-article-', substring-after(//OAI-PMH:record/OAI-PMH:header/OAI-PMH:identifier, '/'))"
                 />
             </xsl:variable>
+           
             <xsl:variable name="manualFileID"><xsl:value-of
-                select="for $i in ($file_info_data/file_info/manualFiles) return ($i/manualMD5)"/></xsl:variable>
+                select="for $i in ($file_info_data/files/_/id) return concat('file-',$i)"/></xsl:variable> 
             <mets:fileGrp
                 ID="{if ($linkOnly = 'true') then ('linkOnly') else (if(//fileGrp/@ID) then (//fileGrp/@ID) else $fileXternalID)}">
                 <xsl:choose>
@@ -383,25 +395,13 @@
                         <xsl:for-each select="$file_info_data/file_info/files/_">
                             <mets:file>                 
                                 <xsl:variable name="replaceSpace" select="replace(name, ' ', '_')"/>
-                                <xsl:variable name="replace-å" select="
-                                        for $i in $replaceSpace
-                                        return
-                                            replace($i, 'å', 'a')"/>
-                                <xsl:variable name="replace-ä" select="
-                                        for $j in $replace-å
-                                        return
-                                            replace($j, 'ä', 'a')"/>
-                                <xsl:variable name="replace-ö" select="
-                                        for $k in $replace-ä
-                                        return
-                                            replace($k, 'ö', 'o')"/>
+                                <xsl:variable name="replace-å" select="for $i in $replaceSpace return replace($i, 'å', 'a')"/>
+                                <xsl:variable name="replace-ä" select="for $j in $replace-å return replace($j, 'ä', 'a')"/>
+                                <xsl:variable name="replace-ö" select="for $k in $replace-ä return replace($k, 'ö', 'o')"/>
                                 <xsl:attribute name="ID" select="concat('file-', id)"/>
                                 <xsl:attribute name="CREATED" select="ancestor::file_info/@pubDate"/>
-                                <xsl:attribute name="OWNERID" select="
-                                        if (is__link__only = 'true') then
-                                            ancestor::file_info/manualFiles/manualFileName
-                                        else
-                                            $replace-ö"/>
+                                <xsl:attribute name="OWNERID" select="if (is__link__only = 'true')
+                                    then ancestor::file_info/manualFiles/manualFileName else $replace-ö"/>
                                 <xsl:attribute name="SIZE" select="
                                         if (is__link__only = 'true')
                                         then
@@ -443,11 +443,10 @@
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:when
-                        test="string-length($file_info_data/file_info/files) = 0 or $file_info_data/file_info/files//is__link__only/text() = 'true'">
+                        test="$linkOnly = 'true'">
                         <xsl:for-each select="$file_info_data/file_info/manualFiles">
                         <mets:file>
-                            <!-- <xsl:attribute name="ID" select="'file-0'"/> -->
-                            <xsl:attribute name="ID" select="concat('file-',manualMD5)"/>
+                            <xsl:attribute name="ID" select="$manualFileID"/>
                             <xsl:attribute name="CREATED"
                                 select="$file_info_data/file_info/@pubDate"/>
                             <xsl:attribute name="OWNERID" select="manualFileName"/>
@@ -474,37 +473,40 @@
     </xsl:template>
 
     <xsl:template name="createStructMap">
-        <mets:structMap TYPE="physical">
-            <mets:div LABEL="files">
-                <xsl:choose>
-                    <xsl:when
-                        test="string-length($file_info_data/file_info/files) = 0 or $file_info_data/file_info/files//is__link__only/text() = 'true'">
-                        <xsl:for-each select="$file_info_data/file_info/manualFiles">
-                            <mets:div
-                                LABEL="{substring-before(for $i in (tokenize(manualFileName,'\.')[last()]) return $filext2mimetypeMap//entry[@filext = $i]/@mimetype,'/')}">
-
-
-                                <mets:fptr FILEID="{concat('file-',manualMD5)}"/>
-                                <!-- FILEID="{if (is__link__only = 'true') then ('file-0') else concat('file-',id)}"/> -->
-                            </mets:div>
-                        </xsl:for-each>
-
-                    </xsl:when>
-                    <xsl:otherwise>
+        <xsl:variable name="linkOnly">
+            <xsl:value-of select="($file_info_data/file_info/files/_/is__link__only)"/>            
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$linkOnly = 'true'">
+                <mets:structMap TYPE="logical">
+                    <mets:div LABEL="linkOnly">
                         <xsl:for-each select="$file_info_data/file_info/files/_">
                             <mets:div
                                 LABEL="{substring-before(for $i in (tokenize(name,'\.')[last()]) return $filext2mimetypeMap//entry[@filext = $i]/@mimetype,'/')}">
-
-
+                                
+                                
                                 <mets:fptr FILEID="{concat('file-',id)}"/>
-                                <!-- FILEID="{if (is__link__only = 'true') then ('file-0') else concat('file-',id)}"/> -->
                             </mets:div>
                         </xsl:for-each>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </mets:div>
-        </mets:structMap>
-
+                    </mets:div>
+                 </mets:structMap>
+            </xsl:when>  
+            
+            <xsl:otherwise>
+             <mets:structMap TYPE="physical">
+             <mets:div LABEL="data">   
+               <mets:div LABEL="files">  
+                <xsl:for-each select="$file_info_data/file_info/files/_">
+                    <mets:div
+                        LABEL="{substring-before(for $i in (tokenize(name,'\.')[last()]) return $filext2mimetypeMap//entry[@filext = $i]/@mimetype,'/')}">
+                        <mets:fptr FILEID="{concat('file-',id)}"/>
+                    </mets:div>
+                </xsl:for-each>
+                </mets:div>
+              </mets:div>  
+             </mets:structMap>   
+            </xsl:otherwise>
+        </xsl:choose> 
     </xsl:template>
 
     <xsl:template match="dc:identifier">

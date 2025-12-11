@@ -3,7 +3,7 @@
 # Prel: cd //figsHarvestTransform
 #----------------------------------------
 
-NR=$(head -6 figsFeedsURLnrList.txt | tail -1 | cut -d '=' -f 1 | cut -d 'l' -f 2)
+NR=$(head -6 0figsFeedsURLnrList.txt | tail -1 | cut -d '=' -f 1 | cut -d 'l' -f 2)
 
 current=$(date +"%Y-%m-%d")
 

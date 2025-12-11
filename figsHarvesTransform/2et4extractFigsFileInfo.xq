@@ -12,9 +12,13 @@ It is possible that the steps in this first mode in the future workflow will als
 
 (ii) Second mode, then, creates the necessary file_info.xml supplementary metadata-file, to be used as a parameter in the subsequent figMETS2fgs.xsl transformation of each item ($artId_originalMD) to a sip.xml compliant with FGS-CSPackage. As explained, this is also when the actual data files belonging to an item are fetched to the corresponding package subdirectory. In this mode, then, section 5 (fetching the data files) is activated, again through an if-clause exclusive to individual items, while section 0, for splitting up feeds, is deactivated.  
 
-Changes to previous versions include:
-
-2024-03-25	*Current version 1.1: Improved version treatment for $artId, in case item record was updated with new files since OAI-PMH feed harvest 
+Change history:
+2025-11-20	*Current version 1.5: FILENAMECOUNT = count($docMD//mets:file) as default, to always get the real number of files even > 10  
+2025-04-24	Version 1.4: Changed order in output file_info.xml so that FILENAMECOUNT now comes before FILELIST for ease of overview. Added explanation (from dryad5extractFileInfo.xq) of failure to create zip-file 'filesDownload'for error message "405 Method Not Allowed"). Also changed from 'SW-Agent_eFFIxq' to full filename in 'SW-Agent_2et4extractFigsFileInfo.xq' for clarity.  
+2025-02-24	Version 1.3: Introduced $relationType associated with $resourceDOI, instead of previously hardcoded $isSupplementTo
+2024-10-09/30	Version 1.2: Introduced $dataCreate and $dataDir to steer $fetchFiles directly to separate 'data' folder (in accordance with dryad5extractFileinfo.xq); might later be renamed 'representations' in accordance with FGS2.0 / E-ARK CSIP 2.1.
+Added 'DSWPS' as also triggering $archivalInst = '310 Sociologiska institutionen'. Reinstated single item check (contains($mdFilePath,'originalMD')) to avoid file fetch for feeds. Conditioned $dataCreate of $dataDir to single items.
+2024-03-25	Version 1.1: Improved version treatment for $artId, in case item record was updated with new files since OAI-PMH feed harvest 
 2024-02-20	Version 1.0: Adaptation to figMETS2fgs v1.0; added SRRD and Srrd as triggers for archivalInst='310 Sociologiska institutionen'.    
 2023-02-10/2023-08-23	Version 0.9999: Added element $resourceDOI as first selection option for dcterms:isReferencedBy in figMETS2fgs.xsl. 2023-08-23: added $isSupplementTo as new first choice for dcterms:isReferencedBy, relegating to second choice $resourceDOI (both appear simultaneously in the fighare API output for now).  
 2022-12-08   Version 0.9998: Updated $prefSUauthorName to handle cases with single authors without ORCiD
@@ -74,7 +78,6 @@ ii) multiple ORCiDs and/or iii) multiple sukatIDs for the first author were foun
 20180816 Version 0.5: Replaced parsing-error problematic $sukatIdExt with $sukat_info temp. in output of $sukatID1. Also detected yet unexplained errors / missing values for $sukatInstititution.
 
 20180720 Version 0.4: Added $sukatID1 and $sukatInstitution in output. Made EMBARGODATE conditional to avoid empty values. 
-
 20180718 Version 0.3: Added @FILECOUNT and @EMBARGODATE in output. :)
 
 xquery version "3.0";
@@ -89,13 +92,15 @@ declare namespace OAI-PMH = "http://www.openarchives.org/OAI/2.0/";
 declare namespace file="http://expath.org/ns/file";
 declare namespace fetch="http://basex.org/modules/fetch";
 declare namespace html="http://www.w3.org/1999/xhtml";
-declare namespace json="json";
-:)
+declare namespace json="json";:)
+
 declare variable $recursive := true();
-declare variable $mdFilePath as xs:string? external := "file:/C:/Users/joph9849/Desktop/reposit2fgsCSP/figsHarvesTransform/figsMETSfeed85pacs/figsMETSfeed85-api20240215until20240318.xml";
-declare variable $path as xs:string? external := "file:/C:/Users/joph9849/Desktop/reposit2fgsCSP/figsHarvesTransform/figsMETSfeed85pacs";
+declare variable $mdFilePath as xs:string? external := "file:/M:/MADIArkiv/Figshare/figsMETSfeed101pacs/30122545.v1/30122545.v1_originalMD.xml";
+declare variable $path as xs:string? external := "file:/M:/MADIArkiv/Figshare/figsMETSfeed101pacs/";
 let $fileParent := if (contains($mdFilePath, 'file:/')) then file:parent($mdFilePath) else $path
-let $pathChildren := file:children($path)
+(:let $pathChildren := file:children($path):)
+let $dataCreate :=  if (contains($mdFilePath,'originalMD')) then file:create-dir(concat($fileParent,'data')) else ()
+let $dataDir := for $f in file:children($fileParent) return  $f[file:is-dir($f) and file:name($f) = 'data']
 let $docMD := doc($mdFilePath)
 
 (:-------  0. Splitting-up  figsMETSfeeds------------------- :)
@@ -125,11 +130,15 @@ return
         substring-after($x, 'sthlmuni.')
 for $u in $artId
 let $url := concat("https://api.figshare.com/v2/articles/", $u)
+let $filesMD := concat("https://api.figshare.com/v2/articles",$u,'files?page=1&amp;page_size=100')
 let $jsonMD := html:parse(unparsed-text($url))
+(:let $filesonMD := html:parse(unparsed-text($filesMD)):)
+(:let $fileson2xml := json:parse($filesonMD):)
 let $json2xml := json:parse($jsonMD)
 (: <- delete me to activate old, alternative version instead  :)
 let $resourceDOI := for $i in $json2xml//resource__doi  return if(string-length($i) = 0)  then () else concat("https://doi.org/",$i)
-let $isSupplementTo := for $i in $json2xml//relation return if ($i='IsSupplementTo') then if(string-length($i) = 0)  then () else $i/following-sibling::link
+(:let $isSupplementTo := for $i in $json2xml//relation return if ($i='IsSupplementTo') then if(string-length($i) = 0)  then () else $i/following-sibling::link:)
+let $relationType := for $i in $json2xml//relation return if ($i/following-sibling::link = $resourceDOI) then $i[$i/following-sibling::link = $resourceDOI] else ()
 for $y in ($json2xml)
 let $z := if ($y//files//is__link__only/text() = 'true') then
     'LinkOnly'
@@ -140,7 +149,7 @@ return
     <fileNameURI>{replace($n, '%20', ' ')}</fileNameURI>
 let $arrayZ := for $i in $y//files
 return
-    array {$i//name/text()}
+    array {$i//name/text()} 
 let $arrayU := array {$zURIs/text()}
 let $xURIs := for $x in $zURIs
 return
@@ -148,7 +157,7 @@ return
         $x
     else
         <note>Filename OK</note>
-let $downloadURL := $y//files//download__url 
+let $downloadURL := $y//files/_/download__url 
 (:let $downloadURL := $docMD//mets:FLocat/@xlink:href:)
 let $w := if ($y//embargo__date/@type = 'null') then
     'None'
@@ -216,6 +225,7 @@ let $archivalInst := if ($y//references/_[contains(.,'suda.su.se')]) then '310 S
 else if ($y//tags/_[contains(.,'CeUL')]) then '306 Institutionen för pedagogik och didaktik' 
 else if ($y//tags/_[contains(.,'Public Health')]) then '333 Institutionen för folkhälsovetenskap'
 else if ($z[contains(.,'wps')]) then '310 Sociologiska institutionen'
+else if ($z[contains(.,'DSWPS')]) then '310 Sociologiska institutionen'
 else if ($z[contains(.,'SRRD')]) then '310 Sociologiska institutionen'
 else if ($z[contains(.,'Srrd')]) then '310 Sociologiska institutionen'
 else if ($z[contains(.,'TLHE')]) then '306 Institutionen för pedagogik och didaktik' 
@@ -245,11 +255,13 @@ let $warn := if ($ORCount > 1 or string-length($archivalInst) < 1 or string-leng
 (: pubDate="{$y//published__date}"
    DOI="{concat('https://doi.org/',$docMD//dc:identifier)}" :)
 
-let $doc := <file_info cite="{$y//citation}" DOI="{$y//doi}" pubDate="{$docMD//dc:date}" fileInfo-harvestDate="{current-dateTime()}" SW-Agent_eFFIxq="{'v1.1'}" FILELIST="{
-if (($y//files//is__link__only/text() = 'true') or (string-length($y//files) = 0)) then 'external' else $z}"
-FILENAMECOUNT="{if (($y//files//is__link__only/text() = 'true') or (string-length($y//files) = 0)) then 0 else count($z)}" LicenseURL="{$y//license/url}" LicenseNAME="{$y//license/name}" EMBARGODATE="{$w}"
+let $doc := <file_info cite="{$y//citation}" DOI="{$y//doi}" pubDate="{$docMD//dc:date}" fileInfo-harvestDate="{current-dateTime()}" SW-Agent_2et4extractFigsFileInfo.xq="{'v1.4'}"
+FILENAMECOUNT="{if (($y//files//is__link__only/text() = 'true') or (string-length($y//files) = 0)) then 0 else count($docMD//mets:file)}" 
+FILELIST="{if (($y//files//is__link__only/text() = 'true') or (string-length($y//files) = 0)) then 'external' else $z}"
+LicenseURL="{$y//license/url}" LicenseNAME="{$y//license/name}" EMBARGODATE="{$w}"
 prefSUauthorNameInv="{$prefSUauthorName}" prefSUauthORCiD="{$pX}" archivalInst="{$archivalInst}" 
-ALERT="{$warn}" resourceDOI="{$resourceDOI}" isSupplementTo="{$isSupplementTo}">{$y//files, <mimeTypes>{$mimeTypes}</mimeTypes>, $xURIs, $manDLname, $y//references, $y//funding__list, $y//custom__fields}</file_info>
+ALERT="{$warn}" resourceDOI="{$resourceDOI}" relationType="{$relationType}">{$y//files, <mimeTypes>{$mimeTypes}</mimeTypes>, $xURIs, $manDLname, $y//references, $y//funding__list, $y//custom__fields}</file_info>
+(:isSupplementTo="{$isSupplementTo}":)
 
 (:---- 3. Create item Folders: deprecated. 
 Use Bash script:  "dir-mvOrigMDfig.sh". Earlier turned off for use on individual items.  
@@ -263,16 +275,29 @@ let $result := file:append(if (contains($mdFilePath, 'https://')) then
  ($subFold/"file_infoFeed.xml")
 else  (concat($fileParent, "/file_info.xml")), $doc)
 
-(:---- 5. Fetch data files of individual items ----- :)
 
-let $fetchFiles := if (contains($mdFilePath,'originalMD')) then for $f in $downloadURL
-return
-    if (not(contains($f, 'ndownloader.figshare'))) then ()
-    else
-        file:write-binary(concat($fileParent, replace(replace(replace(replace($f/preceding-sibling::name/text(), ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o')), lazy:cache(fetch:binary($f)))
-        
-(: ---- :)
+(:---- 5. Fetch data files of individual items --:) 
+
+let $fetchFiles := if (contains($mdFilePath,'originalMD') and (count($z) > 5 and $y//size < 823456790)) 
+then file:write-binary(concat($dataDir,'filesDownload'),fetch:binary(concat('https://su.figshare.com/ndownloader/articles/',$artId)))
+
+(:
+let $fetchFiles := if (contains($mdFilePath,'originalMD') and (count($z) > 5 and $y//size < 823456790)) 
+then file:write-binary(concat($dataDir,'filesDownload'),fetch:binary(concat('https://su.figshare.com/ndownloader/articles/',$artId)))
+:)
+(: From dryad5extractFileInfo.xq:  
+possible explanation for response "405 Method Not Allowed": 
+https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.xsj3tx9hx/download - browser response: "The dataset is too large for zip file generation. Please download each file individually." 
+Then, go to concat('https://doi.org/',$doi) and download :)
+ 
+else
+if (contains($mdFilePath,'originalMD')) then for $f in $downloadURL
+return file:write-binary(concat($dataDir, replace(replace(replace(replace($f/preceding-sibling::name/text(), ' ', '_'), 'å', 'a'), 'ä', 'a'), 'ö', 'o')), lazy:cache(fetch:binary($f)))      
+                            
+(: if (not(contains($f, 'ndownloader.figshare'))) then ()
+    else  :)
                  
-return $doc
+return  $doc
+
 
     (: -- END of script --:)
