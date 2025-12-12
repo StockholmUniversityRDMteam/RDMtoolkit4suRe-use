@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Swedisch National Archives additional package information schema version 1.0 2023-03-30 Tomas Wallin -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://xml.ra.se/e-arkiv/implementation-IP/version10/SNAadditionalPackageInfo" targetNamespace="http://xml.ra.se/e-arkiv/implementation-IP/version10/SNAadditionalPackageInfo" 
+    elementFormDefault="qualified">
+    <xs:element name="additionalPackageInfo" type="additionalPackageInfoType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The main element for the additional package information</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:complexType name="additionalPackageInfoType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the additionalPackageInfo element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="control" minOccurs="1" maxOccurs="1" type="controlType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Description of the xml-dokument</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="package" minOccurs="1" maxOccurs="1" type="packageType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Description of the informationpackage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>      
+    </xs:complexType>
+    
+    <xs:complexType name="controlType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the control element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="identification" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Identity of the xml-document</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" minOccurs="1" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Status of the xml-document</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creationDate" minOccurs="1" maxOccurs="1" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creation date of the xml-document</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="creator" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Creator of the xml-document</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>      
+    </xs:complexType>
+    
+    <xs:complexType name="packageType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the package element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="archiveName" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en"> The name of the archive the information in the package belongs to </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="disposal" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any information in the package that can be disposed</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="accessRestrict" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any access restrictions for the information in the package</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="useRestrict" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any use restrictions for the information in the package</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="startDate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The earliest date for the information in the package</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="endDate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The latest date for the information in the package</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="informationClass" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information classification for the information in the package as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="securityClassification" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Security classification for the information in the package as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="audience" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if the information in the package can be published as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="files" minOccurs="0" maxOccurs="1" type="filesType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A grouping of files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">Name of the information package. The same as the name of the rootfolder</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="filesType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the files element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="file" minOccurs="1" maxOccurs="unbounded" type="fileType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Description of a file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="fileType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the file element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="disposal" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any information in the file that can be disposed</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="accessRestrict" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any access restrictions for the information in the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="useRestrict" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if there are any use restrictions for the information in the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="startDate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The earliest date for the information in the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="endDate" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The latest date for the information in the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="informationClass" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information classification for the information in the file as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="securityClassification" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Security classification for the information in the file as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="audience" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Information about if the information in the file can be published as a whole</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="archivalReferencecode" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A reference code for where in an archival hierarchy the file belongs</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="archivalRecordtype" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">The record type of the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="fileDescription" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Additional description of the file. For exampel the function of the file</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">The name of the file</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="path" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">Name and path to the file in the form: file:///path/to/fil</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="identification">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Identifier for the xml-document</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="type" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Type of identifier</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="creator" type="creatorType">
+        <xs:annotation>
+            <xs:documentation>The creator of the xml-document</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:complexType name="creatorType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the creator element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="creatorName" minOccurs="1" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the restrictions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="creatorCode" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the restrictions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creatorDesc" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the restrictions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="creatorCode">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Identifier for the creator</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="type" use="required">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Type of identifier</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="VAT"/>
+                                <xs:enumeration value="DUNS"/>
+                                <xs:enumeration value="ORG"/>
+                                <xs:enumeration value="HSA"/>
+                                <xs:enumeration value="Local"/>
+                                <xs:enumeration value="URI"/>
+                                <xs:enumeration value="OTHER"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+     <xs:element name="disposal" type="disposalType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Description of disposal</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:complexType name="disposalType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the disposal element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="disposalDesc" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the disposal</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="disposable" type="xs:boolean" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">A indicator for if information can be disposed or not. true= contains disposable information false= does not contain disposable information</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="accessRestrict" type="accessRestrictType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Description of access restrictions for the information for exampel secrecy </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:complexType name="accessRestrictType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the accessRestrict element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="accessRestrictDesc" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the restrictions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="restricted" type="xs:boolean" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">A indicator for if there are any access restrictions for he information or not. true= contains information with access restrictions false= does not contain information with access restrictions</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="useRestrict" type="useRestrictType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Description of use restrictions for the information for exampel personal data or copyright</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:complexType name="useRestrictType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The definition of the useRestrict element</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="useRestrictDesc" minOccurs="0" maxOccurs="1" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A description of the restrictions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="restricted" type="xs:boolean" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">A indicator for if there are any use restrictions for he information or not. true= contains information with use restrictions false= does not contain information with use restrictions</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="startDate" type="date">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The earliest date for the information</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="endDate" type="date">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The latest date for the information</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:simpleType name="date">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Custom date type accepting formats: YYYY or YYYY-MM or YYYY-MM-DD</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[\d]{4}\-[\d]{2}\-[\d]{2}|[\d]{4}\-[\d]{2}|[\d]{4}"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType> 
+    
+    <xs:element name="informationClass" type="xs:string">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Information classification for the information</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="securityClassification" type="xs:string">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Security classification for the information</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="audience">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Information about if the information can be published</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="publishable" type="xs:boolean" use="required">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">A indicator for if the information can be published or not. true= he information can be published false= he information can not be published</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>  
+</xs:schema>
