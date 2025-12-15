@@ -10,9 +10,7 @@ To start with we provided the tools used for this purpose in the management of o
 
 The script files (.txt, .sh, .xq and .xsl) for harvesting from the different repositories have been numbered in order to reflect the order of use, e.g.   The former FGS1.2 (2017) [Förvaltningsgemensam specifikation för paketstruktur för e-arkiv. Specifikation, RAFGS1V1.2](https://riksarkivet.se/Media/pdf-filer/doi-t/FGS_Paketstruktur_RAFGS1V1_2.pdf), for the earlier FGS-CSPackage structure, has now been replaced by **FGS Paketstruktur 2.0** Förvaltningsgemensam specifikation för paketstruktur för e-arkiv RAFGS1V2.0, an implementation of: [Common Specification for Information Packages E-ARK CSIP version 2.1.0](https://earkcsip.dilcis.eu/pdf/eark-csip.pdf) and [Specification for Submission Information Packages E-ARK SIP version 2.1.0.](https://earksip.dilcis.eu/pdf/eark-sip.pdf). Most of the files needed for **Figshare** harvest and transformation are now in the **figsHarvesTransform** directory. Only older versions and files that are common to the harvest and transformation for all repositories are directly at the root, notably the important parameter file _filext2mimetypeMapMAIN.xml_.  
 
-
-
-In the present workflow for Figshare, the  2et4extractFigsFileInfo.xq file has two different "modes", with different sections activated automatically, based on the input file representing a feed withth several item records or an individual item:
+In the present workflow for Figshare, the  _2et4extractFigsFileInfo.xq_ file has two different "modes", with different sections activated automatically, based on the input file representing a feed with several item records or an individual item:
 
 (i) First mode is for splitting up an OAI-PMH METSfeed into separate items, "$artId\_originalMD", and by default producing the "file_infoFeed", which is now amended and renamed automatically by the _3dir-mvOrigMDfigMETS.sh_ to become well-formed xml. This will serve as a kind of ToC, together with the corresponding original METSfeed in the final figsMETSfeedNNpacs directory.
 In this mode, **section 0** is turned **on**, and *section 5* (for fetching data files) is turned *off*.
@@ -22,18 +20,26 @@ In this mode, **section 0** is turned **on**, and *section 5* (for fetching data
 The xslt-file *5figMETS2fgs.xsl* now has 2 parameters to be specified in the setup:
 `
 * `file_info_data = 'doc('${cfdu}/file_info.xml')'`
-* filext2mimetypeMap = 'doc('${cfdu}/filext2mimetypeMapMAIN.xml')'
+* `filext2mimetypeMap = 'doc('${cfdu}/filext2mimetypeMapMAIN.xml')'`
 
-both essential, to be set up as XPath expressions (tick the box). They should preferably be run only on individual items, that have been split up from the original feeds.
+both essential, to be set up as XPath expressions (tick the box). They should preferably be run only on individual items, that have been split up from the original feeds. 
+To work together, the specific 'file_info.xml' parameter doc (created by the _2et4extractFigsFileInfo.xq_) and the item  *_originalMD.xml* file (split up from the original OAI-PMH-feed) on which to run the xslt, should both be in the same folder.
+(This is essentially the same for all four repositories represented here.) 
 
-The xslt-file *5figMETS2fgs.xsl* contains a certain amount of preliminary hard coding (especially in the METS-header), awaiting recommended values from the development of a dedicated FGS - Common Specification model folderfor research information and / or research datasets. This might produce also the necessity of adding further extension elements and / or attributes to the METS-file.
+For **dataverseHarvesTransform** the first parameter should be instead:
+  * `file_info_data = 'doc('${cfdu}/nativeMDfile_info.xml')'`.
+     
+**dryadHarvesTransform** has instead an extra parameter that is probably no longer needed:
+  * `checkSums=doc('${cfdu}/checkSums.xml')`.
 
-To work together, the specific 'file_info.xml' parameter doc (created by the _extractFigsFileInfo.xq_) and the item xml-file (split up from the original OAI-PMH-feed) on which to run the xslt, should both be in the same folder.
+This now serves more as a fallback, since file metadata for newer dryad datasets already come with an inbuilt SHA256 checksum, which is used as first choice in the _dryad6DataCite2FGS.xsl_ script.  
 
-The bash script-file, *3dir-mvOrigMDfigMETS.sh* in this repository is for making package folders and moving the items of original metadata xml files \*MD.xml, that were split up from the original METS-feed, in to their respective package folders, where subsequently also their associated data files will end up in the next run of the xq-file.
+The bash script-file, *3dir-mvOrigMDfigMETS.sh* in the **figsHarvesTransform** is for making package folders and moving the items of original metadata xml files \*MD.xml, that were split up from the original METS-feed, in to their respective package folders, where subsequently also their associated data files will end up in the next run of the xq-file. 
 
-With this version comes also a similar directory with script files for Zenodo, **zenHarvesTranform**: *1zenSUBdataciteFeedFirst.sh*, _2zenMiniSplit.xq_, *3zenDir-mvOrigMD*,_4extractZenFileInfo.xq_ and _5zeno2fgs.xsl_ . The use of these scripts for Zenodo is similar to that for Figshare, now with a recently introduced first automatic feed fetcher, *1zenSUBdataciteFeedFirst.sh*, but a separate _2zenMiniSplit.xq_ script for doing the split up. (This is partly due to a less frequent influx of new items to our Stockholm University Library community at Zenodo, compared to su.figshare.com, so we tend to make the harvest at irregular intervals, perhaps only once a year.)
+With this version comes also a similar directory with script files for Zenodo, **zenHarvesTranform**: *1zenSUBdataciteFeedFirst.sh*, _2zenMiniSplit.xq_, *3zenDir-mvOrigMD*,_4extractZenFileInfo.xq_ and _5zeno2fgs.xsl_ . The use of these scripts for Zenodo is similar to that for Figshare, now with a recently introduced first automatic feed fetcher, *1zenSUBdataciteFeedFirst.sh*, but a separate _2zenMiniSplit.xq_ script for doing the split up.
 
-The main similar tools for Dataverse and Dryad have now been added to this repository, some additional initial files remain to be uploaded. 
+The main similar tools for Dataverse (which has only 2 bash and 1 xslt scripts, no XQuery needed here) and Dryad have now been added to this repository. 
+For each repository there is also a _schemas/_ folder, containing some of the validation schemas for the resulting output _mets.xml_ file.    
+
 
 
