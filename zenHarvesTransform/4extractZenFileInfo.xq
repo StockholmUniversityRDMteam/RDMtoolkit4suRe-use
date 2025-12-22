@@ -1,8 +1,8 @@
 (:This xq-file is for extracting Zenodo file metadata and datafiles, by means of the base API "https://zenodo.org/api/records/" or  alternatively https://zenodo.org/record/[record_number]/export/json as a complement to the OAI-PMH-feeds , where filedata are  lacking.
-The declared external variable $mdFilePath is your input file, the "_originalMD"-item produced after splitting up of the OAI-PMH-feed in DataCite format e.g.  by "https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary". It could be either downloaded as an xml-file to a target directory (folder), which will then be your $fileParent, with the whole file path of its new location as $mdFilePath, e.g. "file:/C:/Users/dummy/Desktop/Zenodo/ZenHarvesTransform/zenFeedFirst20200610oai2d_verb=ListRecords%26metadataPrefix=datacite%26set=user-stockholmuniversitylibrary.xml". Or it could be input directly as a URL  (but then xml-encoded for the ampersands). 
-In the second (or third) phase (following the bash-script) the input will be the file location of an individual record / item file.xml.
+The declared external variable $mdFilePath is your input file, the "_originalMD"-item produced after splitting up of the OAI-PMH-feed in DataCite format e.g.  by "https://zenodo.org/oai2d?verb=ListRecords&metadataPrefix=datacite&set=user-stockholmuniversitylibrary". It could be either downloaded as an xml-file to a target directory (folder), which will then be your $fileParent, with the whole file path of its new location as $mdFilePath, e.g. "file:/C:/Users/dummy/Desktop/Zenodo/ZenHarvesTransform/zenFeedFirst20200610oai2d_verb=ListRecords%26metadataPrefix=datacite%26set=user-stockholmuniversitylibrary.xml". Or it could be input directly as a URL  (but then xml-encoded for the ampersands). In the second (or third) phase (following the bash-script) the input will be the file location of an individual record / item file.xml.
 
-20231213  *Present version 0.7: Added SU ROR-id '05f0yaq80' as alternative for affiliation in suAuthors
+20251222	*Present version 0.8: Updated $fetchFiles with replacement of '/' in filenames with '-', to handle zip-files from GitHub releases
+20231213   Version 0.7: Added SU ROR-id '05f0yaq80' as alternative for affiliation in suAuthors
 20231102  version 0.6: substantial changes in $downloadURL and $fetchFiles in section 5; also change in $manDLname, $manDLsize and $manDLmd5 - no string-check of files. Further changed, simplified inverted author names, as now given directly from creatorName
 20220412 version 0.5: with further substantial changes in selection of prefSUAuthor and ORCiD
 20201222  version 0.4: substantial change and removal of variables due to replacement of former SUKAT with  Personalsok, preventing access to SU-affiliation, institution / department at SU - now handled by manual lookup, and sukatID as backup option for missing ORCiD. 
@@ -39,8 +39,8 @@ declare namespace json="json";
 :)
 
 declare variable $recursive := true(); 
-declare variable $mdFilePath as xs:string? external := "file:/C:/Users/joph9849/Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/zenHarvesTransform/zenSUBdataCiteFeed08pacs/17776351/17776351_originalMD.xml";
-declare variable $path as xs:string? external := "file:/C:/Users/joph9849/Nextcloud/Forskningsdatagruppen/01_Arbetsmaterial/01_Hantera-och-lagra-data/04_Skordetroskan/reposit2fgsCSP/zenHarvesTransform/zenSUBdataCiteFeed08pacs";
+declare variable $mdFilePath as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed08pacs/17776351/17776351_originalMD.xml";
+declare variable $path as xs:string? external := "file:/M:/MADIArkiv/Zenodo/zenSUBdataCiteFeed08pacs";
 let $fileParent := if (contains($mdFilePath,'file:/')) then file:parent($mdFilePath) else $path
 (:let $pathChildren := file:children($path)- not used, instead use $dataDir (from 2et4extractFigsFileInfo.xq) :)
 let $dataDir := for $f in file:children($fileParent) return  $f[file:is-dir($f) and file:name($f) = 'data']
@@ -130,29 +130,23 @@ let $manDLname := if ($y//files//is__link__only/text()='true')(: or (string-leng
 let $manDLsize := if ($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):)  then  <manualFileSize>Replace by manually downloaded fileSize!</manualFileSize> else ()
 let $manDLmd5 := if ($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):)  then <manualMD5>Replace by manually downloaded MD5!</manualMD5> else ()
 let $warn := if (not ($authors/following-sibling::datacite:affiliation[contains(.,'Stockholm')]) or ($ORCount > 1)) then ('ID-check!') else if($y//files//is__link__only/text()='true')(: or (string-length($y//files) = 0 ):) then ('Manual file download!') else ('None') 
-let $doc := <file_info  DOI="{($y//doi)[1]}" pubDate="{$y//publication__date}" created="{$y//created}" updated="{$y//updated}"  fileInfo-harvestDate="{current-dateTime()}" SW-Agent_eZFIxq="{'v0.7'}" FILELIST="{if(($y//files//is__link__only/text()='true') )  then 'external' else $z}" FILENAMECOUNT="{count($z)}"  
+let $doc := <file_info  DOI="{($y//doi)[1]}" pubDate="{$y//publication__date}" created="{$y//created}" updated="{$y//updated}"  fileInfo-harvestDate="{current-dateTime()}" SW-Agent_eZFIxq="{'v0.8'}" FILELIST="{if(($y//files//is__link__only/text()='true') )  then 'external' else $z}" FILENAMECOUNT="{count($z)}"  
  prefSUauthorName="{$prefSUauthorInvert}" prefSUauthORCiD="{concat('https://orcid.org/',$pX)}" archivalInst="{$archivalInst[1]}"  ALERT="{$warn}">{$y//files,(: <mimeTypes>{$mimeTypes}</mimeTypes>,:) <references>{$y//references/_}</references>, $manDLname, $manDLsize, $manDLmd5 }</file_info> 
  
-(:---- 3. Create item Folders: deprecated. 
-Use Bash script:  "dir-mvOrigMD.sh" --  :)
+(:-3.Create item folders: deprecated. Use Bash script: 3zenDir-mvOrigMD.sh :)
 
-(:--- 4. Create file_info.xml - parameter file for xslt -- :)
+(: -- 4. Create file_info.xml - parameter file for xslt -- :)
 
 let $result := file:append(if (contains($mdFilePath,'https:\/\/')) then ($subFold/file_info.xml) else (concat($fileParent,"/file_info.xml")), $doc) 
  
-(:---- 5. Fetch data files of individual items ---
-                  - delete right ---> ')' and ':'  to turn off. Put back in to turn on again. --> 
+(:-- 5. Fetch data files of individual items -- delete right ---> ')' and ':'  to turn off. Put back in to turn on again. --> 
 
 let $fetchFiles := for $f in $downloadURL  return file:write-binary(concat($fileParent,replace(replace(replace(if (contains(substring-before(substring-after($f,'files/'),'?'),'/')) then substring-after(substring-before(substring-after($f,'files/'),'?'),'/') else (substring-before(substring-after($f,'files/'),'?')),'%20|%40','_'),'%C3%A5|%C3%A4','a'),'%C3%B6','o')), lazy:cache(fetch:binary($f))) :)
-let $fetchFiles := if  ($y//total > 5 and $y//size < 823456790) 
-then file:write-binary(concat($dataDir,'filesDownload'),fetch:binary(concat('https://zenodo.org/api/records/',$artId)))
-else 
-(:let $fetchFiles := :) for $f in $downloadURL  return (file:write-binary(concat($dataDir,replace(replace(($f/ancestor::links/preceding-sibling::key),'/','-'),' ','_')), lazy:cache(fetch:binary($f)))) 
-(: This WORKS for most items except for filenames with spaces! :)
 
-(: 
-let $fetchFiles := for $f in $y//files[contains(.,'https')]//links/content  return (file:write-binary(concat($fileParent,$f/ancestor::links/preceding-sibling::key), lazy:cache(fetch:binary($f)))) This does NOT work! :)
-
-(: <-- delete left '('and ':'  to turn off. Put back in to turn on again. -- :)
+let $fetchFiles := (:if  ($y//total > 5 and $y//size < 823456790) 
+then file:write-binary(concat($dataDir,'files-archive'),fetch:binary(concat($url,'files-archive'))) [This does NOT work; propose to replace with new BASH script for the files download to the data folder using e.g.: curl -G "https://zenodo.org/api/records/17776351/files-archive" > filesDownload and then unzip filesDownload + rm filesDownload. ]
+else :)
+for $f in $downloadURL  return (file:write-binary(concat($dataDir,replace(replace(($f/ancestor::links/preceding-sibling::key),'/','-'),' ','_')), lazy:cache(fetch:binary($f))))
+(:This WORKS for most items except for long filenames with spaces?!:)
 
 return $doc
